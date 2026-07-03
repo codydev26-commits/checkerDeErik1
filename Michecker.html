@@ -1,32 +1,38 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPTV Checker Pro — @Devayanokoji</title>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
-            --accent:    #4a9eff;
-            --accent2:   #7bc8ff;
-            --accent-dim:#1a4a7a;
-            --accent-faint: rgba(74,158,255,0.12);
-            --black:     #000000;
-            --black-deep:#030608;
-            --glass:     rgba(2,6,14,0.78);
-            --glass-lite:rgba(5,10,20,0.60);
-            --border:    rgba(74,158,255,0.35);
-            --border-hi: rgba(74,158,255,0.80);
-            --text:      #d8e8f8;
-            --text-dim:  #5a7a9a;
-            --green:     #00e096;
-            --yellow:    #f0c040;
-            --red-glow:  #ff4a4a;
+            --accent: #4a9eff;
+            --accent2: #7bc8ff;
+            --accent-dim: #1a4a7a;
+            --accent-faint: rgba(74, 158, 255, 0.12);
+            --black: #000000;
+            --black-deep: #030608;
+            --glass: rgba(2, 6, 14, 0.78);
+            --glass-lite: rgba(5, 10, 20, 0.60);
+            --border: rgba(74, 158, 255, 0.35);
+            --border-hi: rgba(74, 158, 255, 0.80);
+            --text: #d8e8f8;
+            --text-dim: #5a7a9a;
+            --green: #00e096;
+            --yellow: #f0c040;
+            --red-glow: #ff4a4a;
             --font-mono: 'Share Tech Mono', 'Courier New', monospace;
-            --font-ui:   'Rajdhani', sans-serif;
+            --font-ui: 'Rajdhani', sans-serif;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             min-height: 100vh;
@@ -44,10 +50,10 @@
             inset: 0;
             background:
                 linear-gradient(to bottom,
-                    rgba(0,0,0,0.70) 0%,
-                    rgba(0,0,0,0.42) 35%,
-                    rgba(0,0,0,0.52) 65%,
-                    rgba(0,0,0,0.80) 100%),
+                    rgba(0, 0, 0, 0.70) 0%,
+                    rgba(0, 0, 0, 0.42) 35%,
+                    rgba(0, 0, 0, 0.52) 65%,
+                    rgba(0, 0, 0, 0.80) 100%),
                 url('background.jpg') center/cover no-repeat;
             z-index: 0;
         }
@@ -57,7 +63,7 @@
             content: '';
             position: fixed;
             inset: 0;
-            background: radial-gradient(ellipse at center, transparent 20%, rgba(0,5,20,0.60) 100%);
+            background: radial-gradient(ellipse at center, transparent 20%, rgba(0, 5, 20, 0.60) 100%);
             z-index: 0;
             pointer-events: none;
         }
@@ -88,7 +94,7 @@
             margin-bottom: 10px;
             border: 1px solid var(--accent-dim);
             padding: 4px 16px;
-            background: rgba(0,10,30,0.5);
+            background: rgba(0, 10, 30, 0.5);
         }
 
         h1 {
@@ -98,11 +104,13 @@
             color: #fff;
             letter-spacing: 4px;
             text-transform: uppercase;
-            text-shadow: 0 0 30px rgba(74,158,255,0.7), 0 0 60px rgba(74,158,255,0.25);
+            text-shadow: 0 0 30px rgba(74, 158, 255, 0.7), 0 0 60px rgba(74, 158, 255, 0.25);
             margin-bottom: 6px;
         }
 
-        h1 span { color: var(--accent2); }
+        h1 span {
+            color: var(--accent2);
+        }
 
         .subtitle {
             font-size: 13px;
@@ -126,12 +134,16 @@
         .card::before {
             content: '';
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 2px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
             background: linear-gradient(90deg, transparent, var(--accent), transparent);
         }
 
-        .card:hover { border-color: var(--border-hi); }
+        .card:hover {
+            border-color: var(--border-hi);
+        }
 
         h2 {
             font-family: var(--font-ui);
@@ -154,10 +166,11 @@
         }
 
         /* ── INPUTS ── */
-        textarea, input[type="text"] {
+        textarea,
+        input[type="text"] {
             width: 100%;
             padding: 14px 16px;
-            background: rgba(0,5,15,0.70);
+            background: rgba(0, 5, 15, 0.70);
             border: 1px solid var(--border);
             color: var(--text);
             font-family: var(--font-mono);
@@ -168,13 +181,17 @@
             outline: none;
         }
 
-        textarea:focus, input[type="text"]:focus {
+        textarea:focus,
+        input[type="text"]:focus {
             border-color: var(--accent2);
-            box-shadow: 0 0 16px rgba(74,158,255,0.25);
-            background: rgba(0,5,20,0.82);
+            box-shadow: 0 0 16px rgba(74, 158, 255, 0.25);
+            background: rgba(0, 5, 20, 0.82);
         }
 
-        textarea::placeholder, input::placeholder { color: #2a4a6a; }
+        textarea::placeholder,
+        input::placeholder {
+            color: #2a4a6a;
+        }
 
         /* ── BUTTONS ── */
         .btn {
@@ -207,12 +224,14 @@
             transition: transform 0.25s;
         }
 
-        .btn:hover::before { transform: scaleX(1); }
+        .btn:hover::before {
+            transform: scaleX(1);
+        }
 
         .btn:hover {
             color: #fff;
             border-color: var(--accent2);
-            box-shadow: 0 0 24px rgba(74,158,255,0.4);
+            box-shadow: 0 0 24px rgba(74, 158, 255, 0.4);
         }
 
         .btn:disabled {
@@ -222,7 +241,9 @@
             opacity: 0.5;
         }
 
-        .btn:disabled::before { display: none; }
+        .btn:disabled::before {
+            display: none;
+        }
 
         .btn-danger {
             border-color: #3a1a1a;
@@ -232,7 +253,7 @@
         .btn-danger:hover {
             border-color: #ff4757;
             color: #ff4757;
-            box-shadow: 0 0 20px rgba(255,71,87,0.3);
+            box-shadow: 0 0 20px rgba(255, 71, 87, 0.3);
         }
 
         .btn-export {
@@ -241,14 +262,14 @@
         }
 
         .btn-export:hover {
-            box-shadow: 0 0 20px rgba(0,224,150,0.35);
+            box-shadow: 0 0 20px rgba(0, 224, 150, 0.35);
             color: #fff;
             border-color: #00ffaa;
         }
 
         /* ── INFO BOXES ── */
         .info-box {
-            background: rgba(74,158,255,0.06);
+            background: rgba(74, 158, 255, 0.06);
             border-left: 3px solid var(--accent-dim);
             padding: 12px 16px;
             margin: 12px 0;
@@ -258,14 +279,20 @@
         }
 
         /* ── RESULT ITEMS ── */
-        .result { display: none; margin-top: 16px; }
-        .result.show { display: block; }
+        .result {
+            display: none;
+            margin-top: 16px;
+        }
+
+        .result.show {
+            display: block;
+        }
 
         .result-item {
             display: flex;
             align-items: center;
             padding: 10px 0;
-            border-bottom: 1px solid rgba(74,158,255,0.10);
+            border-bottom: 1px solid rgba(74, 158, 255, 0.10);
             flex-wrap: wrap;
             gap: 8px;
         }
@@ -303,9 +330,17 @@
         }
 
         /* ── STATUS / DAYS ── */
-        .status-ok    { color: var(--green); }
-        .status-error { color: var(--red-glow); }
-        .status-check { color: var(--yellow); }
+        .status-ok {
+            color: var(--green);
+        }
+
+        .status-error {
+            color: var(--red-glow);
+        }
+
+        .status-check {
+            color: var(--yellow);
+        }
 
         .days-box {
             display: inline-block;
@@ -317,17 +352,30 @@
             font-size: 13px;
         }
 
-        .days-ok      { border-color: var(--green);    color: var(--green); }
-        .days-warning { border-color: var(--yellow);   color: var(--yellow); }
-        .days-danger  { border-color: var(--red-glow); color: var(--red-glow); }
+        .days-ok {
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .days-warning {
+            border-color: var(--yellow);
+            color: var(--yellow);
+        }
+
+        .days-danger {
+            border-color: var(--red-glow);
+            color: var(--red-glow);
+        }
 
         /* ── PROGRESS BAR ── */
-        .progress-wrap { margin: 20px 0; }
+        .progress-wrap {
+            margin: 20px 0;
+        }
 
         .progress-bar {
             width: 100%;
             height: 6px;
-            background: rgba(255,255,255,0.04);
+            background: rgba(255, 255, 255, 0.04);
             border: none;
             overflow: hidden;
             position: relative;
@@ -343,9 +391,11 @@
         .progress-fill::after {
             content: '';
             position: absolute;
-            right: 0; top: 0;
-            width: 40px; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5));
+            right: 0;
+            top: 0;
+            width: 40px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5));
         }
 
         .progress-stats {
@@ -379,9 +429,17 @@
             color: var(--text-dim);
         }
 
-        .stat-item.active .stat-num { color: var(--green); }
-        .stat-item.error  .stat-num { color: var(--red-glow); }
-        .stat-item.speed  .stat-num { color: var(--yellow); }
+        .stat-item.active .stat-num {
+            color: var(--green);
+        }
+
+        .stat-item.error .stat-num {
+            color: var(--red-glow);
+        }
+
+        .stat-item.speed .stat-num {
+            color: var(--yellow);
+        }
 
         .progress-pct {
             text-align: right;
@@ -402,7 +460,7 @@
         }
 
         .results-table th {
-            background: rgba(74,158,255,0.12);
+            background: rgba(74, 158, 255, 0.12);
             color: var(--accent2);
             padding: 11px 12px;
             text-align: left;
@@ -415,22 +473,28 @@
 
         .results-table td {
             padding: 10px 12px;
-            border: 1px solid rgba(74,158,255,0.08);
+            border: 1px solid rgba(74, 158, 255, 0.08);
             color: var(--text);
             vertical-align: middle;
         }
 
         .results-table tr:hover td {
-            background: rgba(74,158,255,0.06);
+            background: rgba(74, 158, 255, 0.06);
         }
 
-        .results-table tr.row-active td { border-left: 2px solid var(--green); }
-        .results-table tr.row-error  td { border-left: 2px solid #5a1010; opacity: 0.6; }
+        .results-table tr.row-active td {
+            border-left: 2px solid var(--green);
+        }
+
+        .results-table tr.row-error td {
+            border-left: 2px solid #5a1010;
+            opacity: 0.6;
+        }
 
         /* ── ERROR / SUCCESS BOX ── */
         .msg-error {
-            background: rgba(255,74,74,0.08);
-            border: 1px solid rgba(255,74,74,0.4);
+            background: rgba(255, 74, 74, 0.08);
+            border: 1px solid rgba(255, 74, 74, 0.4);
             padding: 14px 18px;
             color: var(--red-glow);
             margin: 10px 0;
@@ -438,8 +502,8 @@
         }
 
         .msg-success {
-            background: rgba(0,224,150,0.06);
-            border: 1px solid rgba(0,224,150,0.3);
+            background: rgba(0, 224, 150, 0.06);
+            border: 1px solid rgba(0, 224, 150, 0.3);
             padding: 14px 18px;
             color: var(--green);
             margin: 10px 0;
@@ -447,8 +511,8 @@
         }
 
         .msg-warning {
-            background: rgba(240,192,64,0.06);
-            border: 1px solid rgba(240,192,64,0.3);
+            background: rgba(240, 192, 64, 0.06);
+            border: 1px solid rgba(240, 192, 64, 0.3);
             padding: 14px 18px;
             color: var(--yellow);
             margin: 10px 0;
@@ -475,13 +539,21 @@
 
         /* ── SCANNING INDICATOR ── */
         @keyframes pulse-blue {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
         }
 
         .scanning-dot {
             display: inline-block;
-            width: 8px; height: 8px;
+            width: 8px;
+            height: 8px;
             background: var(--accent2);
             border-radius: 50%;
             animation: pulse-blue 0.6s infinite;
@@ -490,14 +562,155 @@
 
         /* ── RESPONSIVE ── */
         @media (max-width: 680px) {
-            h1 { font-size: 2em; }
-            .inputs-grid { grid-template-columns: 1fr; }
-            .results-table { font-size: 10px; }
-            .results-table th, .results-table td { padding: 7px 8px; }
-            .progress-stats { gap: 12px; }
+            h1 {
+                font-size: 2em;
+            }
+
+            .inputs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-table {
+                font-size: 10px;
+            }
+
+            .results-table th,
+            .results-table td {
+                padding: 7px 8px;
+            }
+
+            .progress-stats {
+                gap: 12px;
+            }
+        }
+
+        /* ── RESULT CARD & GRID FOR DETECTOR ── */
+        .result-card {
+            background: rgba(2, 6, 14, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .result-card:hover {
+            border-color: var(--accent2);
+            box-shadow: 0 0 20px rgba(74, 158, 255, 0.15);
+        }
+
+        .result-card.active {
+            border-left-color: var(--green);
+            background: linear-gradient(90deg, rgba(0, 224, 150, 0.05), transparent);
+        }
+
+        .result-card.expired {
+            border-left-color: var(--red-glow);
+            background: linear-gradient(90deg, rgba(255, 74, 74, 0.05), transparent);
+        }
+
+        .result-card.error {
+            border-left-color: var(--yellow);
+            background: linear-gradient(90deg, rgba(240, 192, 64, 0.05), transparent);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .result-url {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-dim);
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .badge-active {
+            background: rgba(0, 224, 150, 0.15);
+            color: var(--green);
+            border: 1px solid var(--green);
+        }
+
+        .badge-expired {
+            background: rgba(255, 74, 74, 0.15);
+            color: var(--red-glow);
+            border: 1px solid var(--red-glow);
+        }
+
+        .badge-error {
+            background: rgba(240, 192, 64, 0.15);
+            color: var(--yellow);
+            border: 1px solid var(--yellow);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(74, 158, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .info-item:hover {
+            border-color: var(--accent2);
+            transform: translateY(-2px);
+        }
+
+        .info-label {
+            font-size: 10px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            word-break: break-all;
+        }
+
+        .info-value.highlight {
+            color: var(--accent2);
+        }
+
+        .info-value.success {
+            color: var(--green);
+        }
+
+        .info-value.danger {
+            color: var(--red-glow);
         }
     </style>
 </head>
+
 <body>
     <div class="container">
 
@@ -524,19 +737,14 @@
             <div id="m3uResult" class="result"></div>
         </div>
 
-        <!-- SECCIÓN 2: DETECTOR & ESCANEO MASIVO INTELIGENTE -->
+        <!-- SECCIÓN 2: ESCANEO MASIVO -->
         <div class="card">
-            <h2>📊 Detector & Escaneo Inteligente (M3U & Hits)</h2>
+            <h2>📊 Escaneo Masivo</h2>
             <div class="info-box">
-                Pega cualquier texto con URLs M3U o logs estructurados de Hits de Telegram. Las detectaremos automáticamente.
+                Pega múltiples URLs M3U (una por línea). Escaneo ultra-rápido con 15 hilos simultáneos.
             </div>
-            <textarea id="bulkM3uInput" rows="8" oninput="detectBulkUrls()"
-                placeholder="Pega aquí URLs M3U, listas de reproducción o logs de Hits (ej. Host, Usuário, Senha...)"></textarea>
-            
-            <div id="detectorStats" style="display: none; margin: 10px 0 18px 0; font-size: 13px; font-family: var(--font-ui); letter-spacing: 1px; color: var(--accent2);">
-                ⚡ CUENTAS DETECTADAS: <span id="detectedCount" style="font-weight: bold; color: var(--green); text-shadow: 0 0 10px rgba(0,224,150,0.5);">0</span>
-            </div>
-
+            <textarea id="bulkM3uInput" rows="8"
+                placeholder="https://sdmx.us:443/playlist/cWbFYs8bD5/j9cJqHuRxK/m3u_plus&#10;https://sdmx.us:443/playlist/3JnAMzm274/DfbmXKmVwU/m3u_plus"></textarea>
             <div>
                 <button class="btn" onclick="scanBulkWithDays()" id="btnBulk">
                     🚀 Escanear Todo
@@ -549,11 +757,11 @@
             <div id="bulkResult" class="result"></div>
         </div>
 
-        <!-- SECCIÓN 2.5: DETECTOR DEDICADO DE M3U & HITS -->
+        <!-- SECCIÓN 2.5: DETECTOR DEDICADO DE M3U -->
         <div class="card" id="detectorInteligenteCard">
-            <h2>🔍 Detector de URLs M3U & Hits</h2>
+            <h2>🔍 Detector de M3U</h2>
             <div class="info-box">
-                Pega cualquier texto con URLs M3U o logs estructurados de Hits de Telegram. Las detectaremos individualmente.
+                Pega cualquier texto con URLs M3U o logs estructurados de Hits de Telegram. Las detectaremos individualmente para extraer sus datos y verificar días restantes.
             </div>
             
             <textarea id="detectorInput" rows="8" placeholder="Pega aquí tu texto con URLs M3U... 
@@ -583,8 +791,11 @@ O cualquier texto que contenga URLs de listas M3U/IPTV"></textarea>
                 </div>
                 
                 <div>
-                    <button class="btn btn-export" onclick="checkAllDetector()">
-                        ✅ Verificar Todas
+                    <button class="btn btn-export" onclick="checkAllDetector(false)" id="btnDetAll" style="background:linear-gradient(90deg,var(--accent-dim),#0d2a4a);">
+                        ⚡ Verificar en Conjunto
+                    </button>
+                    <button class="btn btn-export" onclick="checkAllDetector(true)" id="btnDet1x1" style="background:linear-gradient(90deg,#1a3a0a,#0d2a0a); border-color:#4aff7a; color:#4aff7a;">
+                        ⏱️ Verificar 1×1
                     </button>
                     <button class="btn" onclick="copyAllDetector()">
                         📋 Copiar Todas
@@ -594,7 +805,7 @@ O cualquier texto que contenga URLs de listas M3U/IPTV"></textarea>
 
             <!-- Loader de Verificación -->
             <div id="detectorLoader" style="display: none; text-align: center; margin: 25px 0; font-family: var(--font-ui); color: var(--accent2); letter-spacing: 1px;">
-                <span class="scanning-dot"></span> VERIFICANDO CUENTAS...
+                <span class="scanning-dot"></span> <span id="detectorLoaderText">VERIFICANDO CUENTAS...</span>
             </div>
 
             <!-- Resultados del Detector -->
@@ -619,349 +830,321 @@ O cualquier texto que contenga URLs de listas M3U/IPTV"></textarea>
     </div>
 
     <script>
-    'use strict';
+        'use strict';
 
-    // ═══════════════════════════════════════════════
-    //  PARSEAR URL M3U
-    // ═══════════════════════════════════════════════
-    // ═══════════════════════════════════════════════
-    //  PARSEAR URL M3U (Mejorado y flexible)
-    // ═══════════════════════════════════════════════
-    function parseM3UUrl(url) {
-        url = url.trim();
-        if (!url) return null;
+        // ═══════════════════════════════════════════════
+        //  PARSEAR URL M3U
+        // ═══════════════════════════════════════════════
+        function parseM3UUrl(url) {
+            url = url.trim();
+            if (!url) return null;
 
-        try {
-            // Intentar parsear usando el objeto URL estándar
-            const u = new URL(url);
-            const protocol = u.protocol + '//';
-            const host = u.hostname;
-            const port = u.port || (u.protocol === 'https:' ? '443' : '80');
-            
-            // Caso 1: get.php con username y password
-            if (u.pathname.includes('get.php') || u.pathname.includes('player_api.php') || u.pathname.includes('panel_api.php') || u.pathname.includes('xmltv.php')) {
-                const username = u.searchParams.get('username');
-                const password = u.searchParams.get('password');
-                if (username && password) {
-                    return { protocol, host, port, username, password, original: url };
-                }
-            }
-            
-            // Caso 2: /playlist/username/password/m3u_plus
-            const playlistMatch = u.pathname.match(/\/playlist\/([^\/]+)\/([^\/]+)/i);
-            if (playlistMatch) {
-                return {
-                    protocol, host, port,
-                    username: decodeURIComponent(playlistMatch[1]),
-                    password: decodeURIComponent(playlistMatch[2]),
-                    original: url
-                };
-            }
-            
-            // Caso 3: /get/username/password/m3u_plus
-            const getMatch = u.pathname.match(/\/get\/([^\/]+)\/([^\/]+)/i);
-            if (getMatch) {
-                return {
-                    protocol, host, port,
-                    username: decodeURIComponent(getMatch[1]),
-                    password: decodeURIComponent(getMatch[2]),
-                    original: url
-                };
-            }
-        } catch(e) {
-            // Fallback con RegExp si falla URL()
-        }
-
-        // Expresiones regulares de fallback
-        const m1 = url.match(/(https?:\/\/)([^\/:]+)(?::(\d+))?\/get\.php\?[^]*?username=([^&]+)[^]*?password=([^&]+)/i);
-        if (m1) return {
-            protocol: m1[1], host: m1[2],
-            port: m1[3] || (m1[1] === 'https://' ? '443' : '80'),
-            username: decodeURIComponent(m1[4]),
-            password: decodeURIComponent(m1[5]),
-            original: url
-        };
-
-        const m2 = url.match(/(https?:\/\/)([^\/:]+)(?::(\d+))?\/playlist\/([^\/]+)\/([^\/]+)/i);
-        if (m2) return {
-            protocol: m2[1], host: m2[2],
-            port: m2[3] || (m2[1] === 'https://' ? '443' : '80'),
-            username: decodeURIComponent(m2[4]),
-            password: decodeURIComponent(m2[5]),
-            original: url
-        };
-
-        return null;
-    }
-
-    // ═══════════════════════════════════════════════
-    //  EXTRACTOR INTELIGENTE DE CUENTAS (M3U & Hits)
-    // ═══════════════════════════════════════════════
-    function extractM3UAccounts(text) {
-        const accounts = [];
-        const seen = new Set();
-
-        if (!text) return accounts;
-
-        // 1. Extraer URLs M3U directas
-        const urlRegex = /https?:\/\/[^\s"'<>]+(?:get\.php|player_api\.php|panel_api\.php|playlist\/[^\s"'<>]+)/gi;
-        const matches = text.match(urlRegex) || [];
-        
-        matches.forEach(url => {
-            const cleanUrl = url.replace(/[.,;'"`)\]}]+$/, '');
-            const parsed = parseM3UUrl(cleanUrl);
-            if (parsed) {
-                const key = `${parsed.host}:${parsed.port}|${parsed.username}`;
-                if (!seen.has(key)) {
-                    seen.add(key);
-                    accounts.push(parsed);
-                }
-            }
-        });
-
-        // 2. Extraer de formatos de texto estructurado (ej: logs de Hits de Telegram)
-        const lines = text.split('\n');
-        let currentHost = null;
-        let currentUser = null;
-        let currentPass = null;
-
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i].trim();
-            
-            // Detectar Host/Servidor
-            const hostMatch = line.match(/(?:Host|Servidor|IP do Host|📍IP do Host)\s*►?\s*(https?:\/\/[^\s]+)/i) || 
-                              line.match(/(?:Host|Servidor)\s*:\s*(https?:\/\/[^\s]+)/i);
-            if (hostMatch) {
-                currentHost = hostMatch[1].replace(/\/$/, '');
-            }
-            
-            // Detectar Usuario
-            const userMatch = line.match(/(?:Usu[áa]rio|Usuario|User|👤)\s*►?\s*([^\s]+)/i) || 
-                              line.match(/(?:Usu[áa]rio|Usuario|User)\s*:\s*([^\s]+)/i);
-            if (userMatch) {
-                currentUser = userMatch[1];
-            }
-            
-            // Detectar Contraseña
-            const passMatch = line.match(/(?:Senha|Password|Contrase[ñn]a|🔒)\s*►?\s*([^\s]+)/i) || 
-                              line.match(/(?:Senha|Password|Contrase[ñn]a)\s*:\s*([^\s]+)/i);
-            if (passMatch) {
-                currentPass = passMatch[1];
-            }
-
-            // Si detectamos un conjunto completo (o si encontramos una línea que indica final de bloque y tenemos datos parciales)
-            if (currentHost && currentUser && currentPass) {
-                let hostClean = currentHost;
-                let proto = 'http://';
-                if (hostClean.startsWith('https://')) {
-                    proto = 'https://';
-                    hostClean = hostClean.substring(8);
-                } else if (hostClean.startsWith('http://')) {
-                    hostClean = hostClean.substring(7);
+            try {
+                const u = new URL(url);
+                const protocol = u.protocol + '//';
+                const host = u.hostname;
+                const port = u.port || (u.protocol === 'https:' ? '443' : '80');
+                
+                if (u.pathname.includes('get.php') || u.pathname.includes('player_api.php') || u.pathname.includes('panel_api.php') || u.pathname.includes('xmltv.php')) {
+                    const username = u.searchParams.get('username');
+                    const password = u.searchParams.get('password');
+                    if (username && password) {
+                        return { protocol, host, port, username, password, original: url };
+                    }
                 }
                 
-                const parts = hostClean.split('/');
-                const hostPort = parts[0];
-                const hostParts = hostPort.split(':');
-                const domain = hostParts[0];
-                const port = hostParts[1] || (proto === 'https://' ? '443' : '80');
-
-                const m3uUrl = `${proto}${domain}:${port}/get.php?username=${encodeURIComponent(currentUser)}&password=${encodeURIComponent(currentPass)}&type=m3u_plus`;
-                const parsed = {
-                    protocol: proto,
-                    host: domain,
-                    port: port,
-                    username: currentUser,
-                    password: currentPass,
-                    original: m3uUrl
-                };
-
-                const key = `${parsed.host}:${parsed.port}|${parsed.username}`;
-                if (!seen.has(key)) {
-                    seen.add(key);
-                    accounts.push(parsed);
+                const playlistMatch = u.pathname.match(/\/playlist\/([^\/]+)\/([^\/]+)/i);
+                if (playlistMatch) {
+                    return {
+                        protocol, host, port,
+                        username: decodeURIComponent(playlistMatch[1]),
+                        password: decodeURIComponent(playlistMatch[2]),
+                        original: url
+                    };
                 }
                 
-                // Limpiar credenciales para buscar el siguiente bloque de hit, pero mantenemos el host de apoyo
-                currentUser = null;
-                currentPass = null;
-            }
-        }
+                const getMatch = u.pathname.match(/\/get\/([^\/]+)\/([^\/]+)/i);
+                if (getMatch) {
+                    return {
+                        protocol, host, port,
+                        username: decodeURIComponent(getMatch[1]),
+                        password: decodeURIComponent(getMatch[2]),
+                        original: url
+                    };
+                }
 
-        return accounts;
-    }
+                if (u.pathname.includes('/ssiptv/get/')) {
+                    const ssiptvMatch = u.pathname.match(/\/ssiptv\/get\/([^\/]+)\/([^\/]+)/i);
+                    if (ssiptvMatch) {
+                        return {
+                            protocol, host, port,
+                            username: decodeURIComponent(ssiptvMatch[1]),
+                            password: decodeURIComponent(ssiptvMatch[2]),
+                            original: url
+                        };
+                    }
+                }
+            } catch(e) {}
 
-    // ═══════════════════════════════════════════════
-    //  MOSTRAR ESTADÍSTICAS DEL DETECTOR EN TIEMPO REAL
-    // ═══════════════════════════════════════════════
-    function detectBulkUrls() {
-        const input = document.getElementById('bulkM3uInput').value;
-        const statsDiv = document.getElementById('detectorStats');
-        const countSpan = document.getElementById('detectedCount');
-        
-        if (!input.trim()) {
-            statsDiv.style.display = 'none';
-            return;
-        }
-        
-        const accounts = extractM3UAccounts(input);
-        statsDiv.style.display = 'block';
-        
-        if (accounts.length > 0) {
-            countSpan.textContent = accounts.length;
-        } else {
-            countSpan.textContent = '0 (Buscando...)';
-        }
-    }
+            const m1 = url.match(/(https?:\/\/)([^\/:]+)(?::(\d+))?\/get\.php\?[^]*?username=([^&]+)[^]*?password=([^&]+)/i);
+            if (m1) return {
+                protocol: m1[1], host: m1[2],
+                port: m1[3] || (m1[1] === 'https://' ? '443' : '80'),
+                username: decodeURIComponent(m1[4]),
+                password: decodeURIComponent(m1[5]),
+                original: url
+            };
 
-    // ═══════════════════════════════════════════════
-    //  FETCH CON TIMEOUT MÁS RÁPIDO
-    // ═══════════════════════════════════════════════
-    async function fetchWithTimeout(url, timeoutMs = 3500) {
-        const ctrl = new AbortController();
-        const tid  = setTimeout(() => ctrl.abort(), timeoutMs);
-        try {
-            const res = await fetch(url, { signal: ctrl.signal });
-            clearTimeout(tid);
-            return res;
-        } catch (e) {
-            clearTimeout(tid);
-            throw e;
-        }
-    }
+            const m2 = url.match(/(https?:\/\/)([^\/:]+)(?::(\d+))?\/playlist\/([^\/]+)\/([^\/]+)/i);
+            if (m2) return {
+                protocol: m2[1], host: m2[2],
+                port: m2[3] || (m2[1] === 'https://' ? '443' : '80'),
+                username: decodeURIComponent(m2[4]),
+                password: decodeURIComponent(m2[5]),
+                original: url
+            };
 
-    // ═══════════════════════════════════════════════
-    //  PROXIES CORS (race entre todos)
-    // ═══════════════════════════════════════════════
-    const PROXIES = [
-        { prefix: 'https://corsproxy.io/?',                     wrap: false },
-        { prefix: 'https://api.allorigins.win/get?url=',        wrap: true  },
-        { prefix: 'https://api.codetabs.com/v1/proxy?url=',     wrap: false },
-        { prefix: 'https://thingproxy.freeboard.io/fetch/',     wrap: false },
-        { prefix: 'https://proxy.cors.sh/',                     wrap: false },
-    ];
-
-    // ═══════════════════════════════════════════════
-    //  VERIFICAR CUENTA (RACE — toma el proxy más rápido)
-    // ═══════════════════════════════════════════════
-    async function verifyAccount(data) {
-        const base   = `${data.protocol}${data.host}:${data.port}`;
-        const apiUrl = `${base}/player_api.php?username=${encodeURIComponent(data.username)}&password=${encodeURIComponent(data.password)}`;
-
-        // Race: el primer proxy que responda con éxito gana
-        try {
-            const result = await Promise.any(
-                PROXIES.map(p => tryProxy(p, apiUrl).then(v => {
-                    if (!v) throw new Error('null');
-                    return v;
-                }))
-            );
-            if (result) return result;
-        } catch (_) {}
-
-        // Fallback directo (sin proxy)
-        try {
-            const res = await fetchWithTimeout(apiUrl, 3000);
-            if (res.ok) {
-                const j = await res.json();
-                if (j?.user_info) return parseUserInfo(j.user_info);
-            }
-        } catch (_) {}
-
-        return { error: true, message: 'Sin conexión (CORS)' };
-    }
-
-    async function tryProxy(proxy, apiUrl) {
-        try {
-            const encoded = proxy.prefix + encodeURIComponent(apiUrl);
-            const res = await fetchWithTimeout(encoded, 4000);
-            if (!res.ok) return null;
-            const body = await res.json();
-            const parsed = proxy.wrap ? JSON.parse(body.contents || 'null') : body;
-            if (parsed?.user_info) return parseUserInfo(parsed.user_info);
-            return null;
-        } catch (_) {
             return null;
         }
-    }
 
-    // ═══════════════════════════════════════════════
-    //  PARSEAR INFO DE USUARIO
-    // ═══════════════════════════════════════════════
-    function parseUserInfo(info) {
-        const status   = (info.status || '').toLowerCase();
-        const isActive = status === 'active' || status === 'activo';
+        function extractM3UAccounts(text) {
+            const accounts = [];
+            const seen = new Set();
 
-        let daysLeft  = '∞';
-        let expDate   = 'No expira';
-        let daysClass = 'days-ok';
+            if (!text) return accounts;
 
-        if (info.exp_date && info.exp_date !== 'Unlimited' && info.exp_date !== 'Ilimitado') {
-            const ts = parseInt(info.exp_date);
-            if (!isNaN(ts) && ts > 0) {
-                const expObj = new Date(ts * 1000);
-                expDate      = expObj.toLocaleDateString('es-ES');
-                const diff   = Math.ceil((expObj - Date.now()) / 86400000);
-                if (diff > 0) {
-                    daysLeft  = diff;
-                    daysClass = diff < 7 ? 'days-danger' : diff < 30 ? 'days-warning' : 'days-ok';
-                } else {
-                    daysLeft  = 'EXPIRADO';
-                    daysClass = 'days-danger';
+            const urlRegex = /https?:\/\/[^\s"'<>|]+(?:get\.php|player_api\.php|panel_api\.php|xmltv\.php|\/playlist\/|\/get\/|\/ssiptv\/get\/)[^\s"'<>|]*/gi;
+            const matches = text.match(urlRegex) || [];
+            
+            matches.forEach(url => {
+                let cleanUrl = url.replace(/[.,;'"`)\]}●■★☆➺]+$/, '');
+                const parsed = parseM3UUrl(cleanUrl);
+                if (parsed) {
+                    const key = `${parsed.host}:${parsed.port}|${parsed.username}`;
+                    if (!seen.has(key)) {
+                        seen.add(key);
+                        accounts.push(parsed);
+                    }
+                }
+            });
+
+            const lines = text.split('\n');
+            let currentHost = null;
+            let currentUser = null;
+            let currentPass = null;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                const hostMatch = line.match(/(?:Host|Servidor|IP do Host|📍IP do Host|Portal|IP do Servidor)\s*(?:➺|►|:|=)\s*(https?:\/\/[^\s]+|[a-zA-Z0-9.-]+:\d+|[a-zA-Z0-9.-]+)/i);
+                if (hostMatch) {
+                    let h = hostMatch[1].trim();
+                    h = h.replace(/[\s★☆]+$/, '');
+                    if (!h.startsWith('http://') && !h.startsWith('https://')) {
+                        h = 'http://' + h;
+                    }
+                    currentHost = h.replace(/\/$/, '');
+                }
+                
+                const userMatch = line.match(/(?:Usu[áa]rio|Usuario|User|👤)\s*(?:➺|►|:|=)\s*([a-zA-Z0-9_.-]+)/i);
+                if (userMatch) {
+                    currentUser = userMatch[1].trim();
+                }
+                
+                const passMatch = line.match(/(?:Senha|Password|Contrase[ñn]a|🔒)\s*(?:➺|►|:|=)\s*([a-zA-Z0-9_.-]+)/i);
+                if (passMatch) {
+                    currentPass = passMatch[1].trim();
+                }
+
+                if (currentHost && currentUser && currentPass) {
+                    let hostClean = currentHost;
+                    let proto = 'http://';
+                    if (hostClean.startsWith('https://')) {
+                        proto = 'https://';
+                        hostClean = hostClean.substring(8);
+                    } else if (hostClean.startsWith('http://')) {
+                        hostClean = hostClean.substring(7);
+                    }
+                    
+                    const parts = hostClean.split('/');
+                    const hostPort = parts[0];
+                    const hostParts = hostPort.split(':');
+                    const domain = hostParts[0];
+                    const port = hostParts[1] || (proto === 'https://' ? '443' : '80');
+
+                    const m3uUrl = `${proto}${domain}:${port}/get.php?username=${encodeURIComponent(currentUser)}&password=${encodeURIComponent(currentPass)}&type=m3u_plus`;
+                    const parsed = {
+                        protocol: proto,
+                        host: domain,
+                        port: port,
+                        username: currentUser,
+                        password: currentPass,
+                        original: m3uUrl
+                    };
+
+                    const key = `${parsed.host}:${parsed.port}|${parsed.username}`;
+                    if (!seen.has(key)) {
+                        seen.add(key);
+                        accounts.push(parsed);
+                    }
+                    
+                    currentUser = null;
+                    currentPass = null;
                 }
             }
+
+            return accounts;
         }
 
-        return {
-            error: false,
-            status: isActive ? '✅ ACTIVA' : '❌ ' + (info.status || 'Inactiva'),
-            statusCode: status,
-            daysLeft, daysClass, expDate,
-            maxConnections:    info.max_connections || '-',
-            activeConnections: info.active_cons     || '0',
-            isTrial: info.is_trial === '1' || info.is_trial === 1,
-        };
-    }
-
-    // ═══════════════════════════════════════════════
-    //  CONVERTIR Y VERIFICAR (single)
-    // ═══════════════════════════════════════════════
-    async function convertAndCheck() {
-        const input     = document.getElementById('m3uInput').value.trim();
-        const resultDiv = document.getElementById('m3uResult');
-        const btn       = document.getElementById('btnConvert');
-
-        if (!input) {
-            resultDiv.innerHTML = '<div class="msg-error">❌ Ingresa una URL M3U</div>';
-            resultDiv.classList.add('show'); return;
+        // ═══════════════════════════════════════════════
+        //  FETCH CON TIMEOUT MÁS RÁPIDO
+        // ═══════════════════════════════════════════════
+        async function fetchWithTimeout(url, timeoutMs = 3500) {
+            const ctrl = new AbortController();
+            const tid = setTimeout(() => ctrl.abort(), timeoutMs);
+            try {
+                const res = await fetch(url, { signal: ctrl.signal });
+                clearTimeout(tid);
+                return res;
+            } catch (e) {
+                clearTimeout(tid);
+                throw e;
+            }
         }
 
-        const data = parseM3UUrl(input);
-        if (!data) {
-            resultDiv.innerHTML = '<div class="msg-error">❌ Formato no reconocido. Usa /get.php?username=... o /playlist/USER/PASS/m3u_plus</div>';
-            resultDiv.classList.add('show'); return;
+        // ═══════════════════════════════════════════════
+        //  PROXIES CORS (race entre todos)
+        // ═══════════════════════════════════════════════
+        const PROXIES = [
+            { prefix: 'https://corsproxy.io/?', wrap: false },
+            { prefix: 'https://api.allorigins.win/get?url=', wrap: true },
+            { prefix: 'https://api.codetabs.com/v1/proxy?url=', wrap: false },
+            { prefix: 'https://thingproxy.freeboard.io/fetch/', wrap: false },
+            { prefix: 'https://proxy.cors.sh/', wrap: false },
+        ];
+
+        // ═══════════════════════════════════════════════
+        //  VERIFICAR CUENTA (RACE — toma el proxy más rápido)
+        // ═══════════════════════════════════════════════
+        async function verifyAccount(data) {
+            const base = `${data.protocol}${data.host}:${data.port}`;
+            const apiUrl = `${base}/player_api.php?username=${encodeURIComponent(data.username)}&password=${encodeURIComponent(data.password)}`;
+
+            // Race: el primer proxy que responda con éxito gana
+            try {
+                const result = await Promise.any(
+                    PROXIES.map(p => tryProxy(p, apiUrl).then(v => {
+                        if (!v) throw new Error('null');
+                        return v;
+                    }))
+                );
+                if (result) return result;
+            } catch (_) { }
+
+            // Fallback directo (sin proxy)
+            try {
+                const res = await fetchWithTimeout(apiUrl, 3000);
+                if (res.ok) {
+                    const j = await res.json();
+                    if (j?.user_info) return parseUserInfo(j.user_info);
+                }
+            } catch (_) { }
+
+            return { error: true, message: 'Sin conexión (CORS)' };
         }
 
-        btn.disabled = true;
-        btn.innerHTML = '<span class="scanning-dot"></span>Verificando...';
-        resultDiv.innerHTML = '<div class="info-box">Conectando al servidor...</div>';
-        resultDiv.classList.add('show');
+        async function tryProxy(proxy, apiUrl) {
+            try {
+                const encoded = proxy.prefix + encodeURIComponent(apiUrl);
+                const res = await fetchWithTimeout(encoded, 4000);
+                if (!res.ok) return null;
+                const body = await res.json();
+                const parsed = proxy.wrap ? JSON.parse(body.contents || 'null') : body;
+                if (parsed?.user_info) return parseUserInfo(parsed.user_info);
+                return null;
+            } catch (_) {
+                return null;
+            }
+        }
 
-        const info   = await verifyAccount(data);
-        const base   = `${data.protocol}${data.host}:${data.port}`;
-        const apiUrl = `${base}/player_api.php?username=${encodeURIComponent(data.username)}&password=${encodeURIComponent(data.password)}`;
-        const m3uUrl = `${base}/get.php?username=${encodeURIComponent(data.username)}&password=${encodeURIComponent(data.password)}&type=m3u_plus`;
+        // ═══════════════════════════════════════════════
+        //  PARSEAR INFO DE USUARIO
+        // ═══════════════════════════════════════════════
+        function parseUserInfo(info) {
+            const status = (info.status || '').toLowerCase();
+            const isActive = status === 'active' || status === 'activo';
 
-        let html = `
+            let daysLeft = '∞';
+            let expDate = 'No expira';
+            let daysClass = 'days-ok';
+
+            if (info.exp_date && info.exp_date !== 'Unlimited' && info.exp_date !== 'Ilimitado') {
+                const ts = parseInt(info.exp_date);
+                if (!isNaN(ts) && ts > 0) {
+                    const expObj = new Date(ts * 1000);
+                    expDate = expObj.toLocaleDateString('es-ES');
+                    const diff = Math.ceil((expObj - Date.now()) / 86400000);
+                    if (diff > 0) {
+                        daysLeft = diff;
+                        daysClass = diff < 7 ? 'days-danger' : diff < 30 ? 'days-warning' : 'days-ok';
+                    } else {
+                        daysLeft = 'EXPIRADO';
+                        daysClass = 'days-danger';
+                    }
+                }
+            }
+
+            return {
+                error: false,
+                status: isActive ? '✅ ACTIVA' : '❌ ' + (info.status || 'Inactiva'),
+                statusCode: status,
+                daysLeft, daysClass, expDate,
+                maxConnections: info.max_connections || '-',
+                activeConnections: info.active_cons || '0',
+                isTrial: info.is_trial === '1' || info.is_trial === 1,
+            };
+        }
+
+        // ═══════════════════════════════════════════════
+        //  CONVERTIR Y VERIFICAR (single)
+        // ═══════════════════════════════════════════════
+        async function convertAndCheck() {
+            const input = document.getElementById('m3uInput').value.trim();
+            const resultDiv = document.getElementById('m3uResult');
+            const btn = document.getElementById('btnConvert');
+
+            if (!input) {
+                resultDiv.innerHTML = '<div class="msg-error">❌ Ingresa una URL M3U</div>';
+                resultDiv.classList.add('show'); return;
+            }
+
+            const data = parseM3UUrl(input);
+            if (!data) {
+                resultDiv.innerHTML = '<div class="msg-error">❌ Formato no reconocido. Usa /get.php?username=... o /playlist/USER/PASS/m3u_plus</div>';
+                resultDiv.classList.add('show'); return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="scanning-dot"></span>Verificando...';
+            resultDiv.innerHTML = '<div class="info-box">Conectando al servidor...</div>';
+            resultDiv.classList.add('show');
+
+            const info = await verifyAccount(data);
+            const base = `${data.protocol}${data.host}:${data.port}`;
+            const apiUrl = `${base}/player_api.php?username=${encodeURIComponent(data.username)}&password=${encodeURIComponent(data.password)}`;
+            const m3uUrl = `${base}/get.php?username=${encodeURIComponent(data.username)}&password=${encodeURIComponent(data.password)}&type=m3u_plus`;
+
+            let html = `
             <div class="msg-success">✅ URL válida — Datos extraídos correctamente</div>
-            ${ri('🖥️ Servidor',   `${data.host}:${data.port}`)}
-            ${ri('👤 Usuario',    data.username, data.username)}
-            ${ri('🔒 Password',   data.password, data.password)}
-            ${ri('🔗 M3U URL',    m3uUrl, m3uUrl, true)}
+            ${ri('🖥️ Servidor', `${data.host}:${data.port}`)}
+            ${ri('👤 Usuario', data.username, data.username)}
+            ${ri('🔒 Password', data.password, data.password)}
+            ${ri('🔗 M3U URL', m3uUrl, m3uUrl, true)}
         `;
 
-        if (info.error) {
-            html += `
+            if (info.error) {
+                html += `
                 <div class="msg-warning" style="margin-top:16px;">
                     ⚠️ No se pudieron obtener los días (CORS).<br>
                     <small>Abre el link manualmente o instala la extensión CORS Unblock.</small><br><br>
@@ -969,8 +1152,8 @@ O cualquier texto que contenga URLs de listas M3U/IPTV"></textarea>
                     <button class="btn" style="padding:8px 20px;font-size:12px;" onclick="window.open('${escHtml(apiUrl)}','_blank')">🌐 Abrir</button>
                 </div>
             `;
-        } else {
-            html += `
+            } else {
+                html += `
                 <hr style="border:none;border-top:1px solid rgba(74,158,255,0.15);margin:18px 0;">
                 <h3 style="font-family:var(--font-ui);color:var(--accent2);letter-spacing:2px;margin-bottom:12px;">📊 ESTADO DE CUENTA</h3>
                 <div class="result-item">
@@ -991,59 +1174,60 @@ O cualquier texto que contenga URLs de listas M3U/IPTV"></textarea>
                 </div>
                 ${info.isTrial ? '<div class="result-item"><span class="label">🎁 Tipo</span><span class="value" style="color:var(--yellow);">CUENTA DE PRUEBA</span></div>' : ''}
             `;
+            }
+
+            resultDiv.innerHTML = html;
+            btn.disabled = false;
+            btn.innerHTML = '🔍 Extraer y Verificar';
         }
 
-        resultDiv.innerHTML = html;
-        btn.disabled = false;
-        btn.innerHTML = '🔍 Extraer y Verificar';
-    }
-
-    function ri(label, val, copyVal, small = false) {
-        const v = escHtml(val);
-        return `
+        function ri(label, val, copyVal, small = false) {
+            const v = escHtml(val);
+            return `
             <div class="result-item">
                 <span class="label">${label}</span>
                 <span class="value" style="${small ? 'font-size:11px;' : ''}">${v}</span>
                 ${copyVal ? `<button class="copy-btn" onclick="copyText(${JSON.stringify(copyVal)})">📋 Copiar</button>` : ''}
             </div>`;
-    }
-
-    // ═══════════════════════════════════════════════
-    //  ESCANEO MASIVO — 15 hilos simultáneos (ultra rápido)
-    // ═══════════════════════════════════════════════
-    async function scanBulkWithDays() {
-        const input       = document.getElementById('bulkM3uInput').value.trim();
-        const resultDiv   = document.getElementById('bulkResult');
-        const progressDiv = document.getElementById('bulkProgress');
-        const btn         = document.getElementById('btnBulk');
-
-        resultDiv.innerHTML = '';
-        resultDiv.classList.remove('show');
-        progressDiv.innerHTML = '';
-
-        if (!input) {
-            resultDiv.innerHTML = '<div class="msg-error">❌ Ingresa URLs o Logs de Hits para escanear</div>';
-            resultDiv.classList.add('show'); return;
         }
 
-        const validUrls = extractM3UAccounts(input);
+        // ═══════════════════════════════════════════════
+        //  ESCANEO MASIVO — 15 hilos simultáneos (ultra rápido)
+        // ═══════════════════════════════════════════════
+        async function scanBulkWithDays() {
+            const input = document.getElementById('bulkM3uInput').value.trim();
+            const resultDiv = document.getElementById('bulkResult');
+            const progressDiv = document.getElementById('bulkProgress');
+            const btn = document.getElementById('btnBulk');
 
-        if (validUrls.length === 0) {
-            resultDiv.innerHTML = '<div class="msg-error">❌ No se encontraron cuentas/URLs válidas en el texto</div>';
-            resultDiv.classList.add('show'); return;
-        }
+            resultDiv.innerHTML = '';
+            resultDiv.classList.remove('show');
+            progressDiv.innerHTML = '';
 
-        btn.disabled = true;
-        btn.innerHTML = '<span class="scanning-dot"></span>Escaneando...';
+            if (!input) {
+                resultDiv.innerHTML = '<div class="msg-error">❌ Ingresa URLs para escanear</div>';
+                resultDiv.classList.add('show'); return;
+            }
 
-        const total   = validUrls.length;
-        let scanned   = 0;
-        let active    = 0;
-        let errored   = 0;
-        const startTs = Date.now();
+            const lines = input.split('\n').map(l => l.trim()).filter(Boolean);
+            const validUrls = lines.map(parseM3UUrl).filter(Boolean);
 
-        // Render progress UI
-        progressDiv.innerHTML = `
+            if (validUrls.length === 0) {
+                resultDiv.innerHTML = '<div class="msg-error">❌ No se encontraron URLs válidas</div>';
+                resultDiv.classList.add('show'); return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="scanning-dot"></span>Escaneando...';
+
+            const total = validUrls.length;
+            let scanned = 0;
+            let active = 0;
+            let errored = 0;
+            const startTs = Date.now();
+
+            // Render progress UI
+            progressDiv.innerHTML = `
             <div class="progress-pct" id="pctText">0%</div>
             <div class="progress-bar"><div class="progress-fill" id="pBar" style="width:0%"></div></div>
             <div class="progress-stats">
@@ -1055,46 +1239,46 @@ O cualquier texto que contenga URLs de listas M3U/IPTV"></textarea>
             </div>
         `;
 
-        function updateProgress() {
-            const pct     = Math.round((scanned / total) * 100);
-            const elapsed = (Date.now() - startTs) / 1000;
-            const spd     = scanned > 0 ? (elapsed / scanned).toFixed(1) : '—';
-            document.getElementById('pBar').style.width    = pct + '%';
-            document.getElementById('pctText').textContent = pct + '%';
-            document.getElementById('sScan').textContent   = scanned;
-            document.getElementById('sAct').textContent    = active;
-            document.getElementById('sErr').textContent    = errored;
-            document.getElementById('sSpd').textContent    = spd;
-        }
-
-        // ── 15 hilos simultáneos (x2.5 más rápido) ──
-        const CONCURRENCY = 15;
-        const results = new Array(total);
-        let idx = 0;
-
-        async function worker() {
-            while (idx < total) {
-                const i    = idx++;
-                const data = validUrls[i];
-                try {
-                    const info = await verifyAccount(data);
-                    results[i] = { ...data, ...info };
-                    if (!info.error && info.daysLeft !== 'EXPIRADO') active++;
-                    else if (info.error) errored++;
-                } catch (_) {
-                    results[i] = { ...data, error: true, message: 'Error inesperado' };
-                    errored++;
-                }
-                scanned++;
-                updateProgress();
+            function updateProgress() {
+                const pct = Math.round((scanned / total) * 100);
+                const elapsed = (Date.now() - startTs) / 1000;
+                const spd = scanned > 0 ? (elapsed / scanned).toFixed(1) : '—';
+                document.getElementById('pBar').style.width = pct + '%';
+                document.getElementById('pctText').textContent = pct + '%';
+                document.getElementById('sScan').textContent = scanned;
+                document.getElementById('sAct').textContent = active;
+                document.getElementById('sErr').textContent = errored;
+                document.getElementById('sSpd').textContent = spd;
             }
-        }
 
-        const workers = Array.from({ length: Math.min(CONCURRENCY, total) }, () => worker());
-        await Promise.all(workers);
+            // ── 15 hilos simultáneos (x2.5 más rápido) ──
+            const CONCURRENCY = 15;
+            const results = new Array(total);
+            let idx = 0;
 
-        // ── Render tabla ──
-        let html = `
+            async function worker() {
+                while (idx < total) {
+                    const i = idx++;
+                    const data = validUrls[i];
+                    try {
+                        const info = await verifyAccount(data);
+                        results[i] = { ...data, ...info };
+                        if (!info.error && info.daysLeft !== 'EXPIRADO') active++;
+                        else if (info.error) errored++;
+                    } catch (_) {
+                        results[i] = { ...data, error: true, message: 'Error inesperado' };
+                        errored++;
+                    }
+                    scanned++;
+                    updateProgress();
+                }
+            }
+
+            const workers = Array.from({ length: Math.min(CONCURRENCY, total) }, () => worker());
+            await Promise.all(workers);
+
+            // ── Render tabla ──
+            let html = `
             <div class="msg-success">✅ Escaneo completado — ${active} activas de ${total}</div>
             <table class="results-table">
                 <thead><tr>
@@ -1109,10 +1293,10 @@ O cualquier texto que contenga URLs de listas M3U/IPTV"></textarea>
                 <tbody>
         `;
 
-        results.forEach((r, i) => {
-            const isActive = !r.error && r.daysLeft !== 'EXPIRADO';
-            const rowCls   = r.error ? 'row-error' : isActive ? 'row-active' : 'row-error';
-            html += `
+            results.forEach((r, i) => {
+                const isActive = !r.error && r.daysLeft !== 'EXPIRADO';
+                const rowCls = r.error ? 'row-error' : isActive ? 'row-active' : 'row-error';
+                html += `
                 <tr class="${rowCls}">
                     <td>${i + 1}</td>
                     <td>${escHtml(r.host + ':' + r.port)}</td>
@@ -1122,9 +1306,9 @@ O cualquier texto que contenga URLs de listas M3U/IPTV"></textarea>
                     <td class="${r.daysClass || ''}">${r.error ? '—' : r.daysLeft}</td>
                     <td>${r.error ? '—' : escHtml(r.expDate)}</td>
                 </tr>`;
-        });
+            });
 
-        html += `
+            html += `
                 </tbody>
             </table>
             <div style="margin-top:16px;">
@@ -1132,31 +1316,26 @@ O cualquier texto que contenga URLs de listas M3U/IPTV"></textarea>
             </div>
         `;
 
-        resultDiv.innerHTML = html;
-        resultDiv.classList.add('show');
-        progressDiv.innerHTML = '';
-        window.lastResults = results;
+            resultDiv.innerHTML = html;
+            resultDiv.classList.add('show');
+            progressDiv.innerHTML = '';
+            window.lastResults = results;
 
-        btn.disabled = false;
-        btn.innerHTML = '🚀 Escanear Todo';
-    }
+            btn.disabled = false;
+            btn.innerHTML = '🚀 Escanear Todo';
+        }
 
-    function clearBulk() {
-        document.getElementById('bulkM3uInput').value = '';
-        const rd = document.getElementById('bulkResult');
-        rd.innerHTML = ''; rd.classList.remove('show');
-        document.getElementById('bulkProgress').innerHTML = '';
-        
-        // Ocultar contador de detector inteligente
-        const statsDiv = document.getElementById('detectorStats');
-        if (statsDiv) statsDiv.style.display = 'none';
-        
-        window.lastResults = null;
-    }
+        function clearBulk() {
+            document.getElementById('bulkM3uInput').value = '';
+            const rd = document.getElementById('bulkResult');
+            rd.innerHTML = ''; rd.classList.remove('show');
+            document.getElementById('bulkProgress').innerHTML = '';
+            window.lastResults = null;
+        }
 
-    // ═══════════════════════════════════════════════
-    //  EXPORTAR ACTIVAS A TXT
-    // ═══════════════════════════════════════════════
+        // ═══════════════════════════════════════════════
+        //  EXPORTAR ACTIVAS A TXT
+        // ═══════════════════════════════════════════════
     function exportToTXT() {
         const all = window.lastResults;
         if (!all || !all.length) return;
@@ -1164,23 +1343,16 @@ O cualquier texto que contenga URLs de listas M3U/IPTV"></textarea>
         const activas = all.filter(r => !r.error && r.daysLeft !== 'EXPIRADO' && r.daysLeft !== '-');
         if (!activas.length) { alert('No hay cuentas activas para exportar.'); return; }
 
-        const sep  = '─'.repeat(50);
-        let txt    = `Checker @Devayanokoji\n${sep}\n\n`;
-
+        let txt = '';
         activas.forEach((r, i) => {
             const base   = `${r.protocol}${r.host}:${r.port}`;
             const m3uUrl = `${base}/get.php?username=${encodeURIComponent(r.username)}&password=${encodeURIComponent(r.password)}&type=m3u_plus`;
-            txt += `[${i + 1}]\n`;
-            txt += `Usuario:        ${r.username}\n`;
-            txt += `Contraseña:     ${r.password}\n`;
-            txt += `URL:            ${base}\n`;
-            txt += `Días Restantes: ${r.daysLeft}\n`;
-            txt += `Expira:         ${r.expDate}\n`;
-            txt += `M3U:            ${m3uUrl}\n`;
-            if (i < activas.length - 1) txt += `\n${sep}\n\n`;
+            txt += `usuario: ${r.username}\n`;
+            txt += `contraseña: ${r.password}\n`;
+            txt += `url: ${base}\n`;
+            txt += `días restantes: ${r.daysLeft}\n`;
+            txt += `m3u: ${m3uUrl}\n\n`;
         });
-
-        txt += `\n\n${sep}\nChecker @Devayanokoji`;
 
         const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
         
@@ -1198,34 +1370,31 @@ O cualquier texto que contenga URLs de listas M3U/IPTV"></textarea>
         URL.revokeObjectURL(a.href);
     }
 
-    // ═══════════════════════════════════════════════
-    //  GENERAR M3U
-    // ═══════════════════════════════════════════════
-    function generateM3U() {
-        const host = document.getElementById('xtHost').value.trim();
-        const user = document.getElementById('xtUser').value.trim();
-        const pass = document.getElementById('xtPass').value.trim();
-        const rd   = document.getElementById('xtResult');
+        // ═══════════════════════════════════════════════
+        //  GENERAR M3U
+        // ═══════════════════════════════════════════════
+        function generateM3U() {
+            const host = document.getElementById('xtHost').value.trim();
+            const user = document.getElementById('xtUser').value.trim();
+            const pass = document.getElementById('xtPass').value.trim();
+            const rd = document.getElementById('xtResult');
 
-        if (!host || !user || !pass) {
-            rd.innerHTML = '<div class="msg-error">❌ Completa todos los campos</div>';
-            rd.classList.add('show'); return;
-        }
+            if (!host || !user || !pass) {
+                rd.innerHTML = '<div class="msg-error">❌ Completa todos los campos</div>';
+                rd.classList.add('show'); return;
+            }
 
-        let proto  = 'http://';
-        let server = host.replace(/^https?:\/\//, m => { proto = m; return ''; });
-        const m3u  = `${proto}${server}/get.php?username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&type=m3u_plus`;
+            let proto = 'http://';
+            let server = host.replace(/^https?:\/\//, m => { proto = m; return ''; });
+            const m3u = `${proto}${server}/get.php?username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&type=m3u_plus`;
 
-        rd.innerHTML = `
+            rd.innerHTML = `
             <div class="msg-success">✅ URL M3U generada</div>
             ${ri('🔗 M3U URL', m3u, m3u, true)}
         `;
-        rd.classList.add('show');
-    }
+            rd.classList.add('show');
+        }
 
-    // ═══════════════════════════════════════════════
-    //  LÓGICA DEL DETECTOR INTELIGENTE DEDICADO
-    // ═══════════════════════════════════════════════
     let detectorDetectedAccounts = [];
     let detectorScanResults = [];
 
@@ -1302,30 +1471,69 @@ O cualquier texto que contenga URLs de listas M3U/IPTV"></textarea>
             const info = await verifyAccount(acc);
             const m3uUrl = `${acc.protocol}${acc.host}:${acc.port}/get.php?username=${encodeURIComponent(acc.username)}&password=${encodeURIComponent(acc.password)}&type=m3u_plus`;
             
+            const isError = !!info.error;
+            const isActive = !info.error && (info.statusCode === 'active' || info.statusCode === 'activo');
+            const isExpired = !info.error && !isActive;
+
+            let cardStatusClass = 'error';
+            let badgeClass = 'badge-error';
+            let badgeText = '⚠️ ERROR';
+
+            if (isActive) {
+                cardStatusClass = 'active';
+                badgeClass = 'badge-active';
+                badgeText = '✅ ACTIVA';
+            } else if (isExpired) {
+                cardStatusClass = 'expired';
+                badgeClass = 'badge-expired';
+                badgeText = '🗓️ EXPIRADA';
+            }
+
             let html = `
                 <div class="msg-success">✅ Resultado para la cuenta seleccionada:</div>
-                ${ri('🖥️ Servidor',   `${acc.host}:${acc.port}`)}
-                ${ri('👤 Usuario',    acc.username, acc.username)}
-                ${ri('🔒 Password',   acc.password, acc.password)}
-                ${ri('🔗 M3U URL',    m3uUrl, m3uUrl, true)}
-            `;
-
-            if (info.error) {
-                html += `
-                    <div class="msg-warning" style="margin-top:16px;">
-                        ⚠️ No se pudieron obtener los días (CORS). Verifica manualmente.
+                <div class="result-card ${cardStatusClass}" style="margin-top:15px;">
+                    <div class="result-header">
+                        <div class="result-url" title="${escHtml(m3uUrl)}">${escHtml(m3uUrl)}</div>
+                        <span class="status-badge ${badgeClass}">${badgeText}</span>
                     </div>
-                `;
-            } else {
-                html += `
-                    <hr style="border:none;border-top:1px solid rgba(74,158,255,0.15);margin:18px 0;">
-                    <h3 style="font-family:var(--font-ui);color:var(--accent2);letter-spacing:2px;margin-bottom:12px;">📊 ESTADO</h3>
-                    <div class="result-item"><span class="label">Estado</span><span class="value ${info.statusCode === 'active' ? 'status-ok' : 'status-error'}">${info.status}</span></div>
-                    <div class="result-item"><span class="label">⏳ Días</span><span class="days-box ${info.daysClass}">${info.daysLeft}${typeof info.daysLeft === 'number' ? ' días' : ''}</span></div>
-                    <div class="result-item"><span class="label">📅 Expira</span><span class="value">${info.expDate}</span></div>
-                    <div class="result-item"><span class="label">👥 Conexiones</span><span class="value">${info.activeConnections} / ${info.maxConnections}</span></div>
-                `;
-            }
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Servidor</div>
+                            <div class="info-value">${escHtml(acc.host)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Puerto</div>
+                            <div class="info-value">${escHtml(acc.port)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Usuario</div>
+                            <div class="info-value highlight">${escHtml(acc.username)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Contraseña</div>
+                            <div class="info-value">${escHtml(acc.password)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Días Restantes</div>
+                            <div class="info-value ${info.daysClass || ''}">${info.error ? '—' : info.daysLeft}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Expira el</div>
+                            <div class="info-value">${info.error ? '—' : escHtml(info.expDate)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Conexiones Max</div>
+                            <div class="info-value">${info.error ? '—' : escHtml(info.maxConnections)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Conexiones Activas</div>
+                            <div class="info-value ${!info.error && parseInt(info.activeConnections) > 0 ? 'success' : ''}">${info.error ? '—' : escHtml(info.activeConnections)}</div>
+                        </div>
+                    </div>
+                    ${info.message ? `<div style="margin-top: 15px; padding: 10px; background: rgba(255, 74, 74, 0.1); border-radius: 6px; color: var(--red-glow); font-size: 11px;">⚠️ ${escHtml(info.message)}</div>` : ''}
+                </div>
+            `;
 
             resultsDiv.innerHTML = html;
             resultsDiv.classList.add('show');
@@ -1338,20 +1546,27 @@ O cualquier texto que contenga URLs de listas M3U/IPTV"></textarea>
         }
     }
 
-    async function checkAllDetector() {
+    async function checkAllDetector(sequential = false) {
         if (detectorDetectedAccounts.length === 0) return;
 
         const loader = document.getElementById('detectorLoader');
+        const loaderText = document.getElementById('detectorLoaderText');
         const resultsDiv = document.getElementById('detectorResults');
+        const btnAll = document.getElementById('btnDetAll');
+        const btn1x1 = document.getElementById('btnDet1x1');
 
         loader.style.display = 'block';
         resultsDiv.innerHTML = '';
         resultsDiv.classList.remove('show');
+        if (btnAll) btnAll.disabled = true;
+        if (btn1x1) btn1x1.disabled = true;
 
         const total = detectorDetectedAccounts.length;
         let active = 0;
-        
-        const CONCURRENCY = 15;
+        let checked = 0;
+
+        const CONCURRENCY = sequential ? 1 : 15;
+        if (loaderText) loaderText.textContent = (sequential ? 'Verificando 1×1: 0/' : 'Verificando en conjunto: 0/') + total + '...';
         detectorScanResults = new Array(total);
         let idx = 0;
 
@@ -1366,6 +1581,8 @@ O cualquier texto que contenga URLs de listas M3U/IPTV"></textarea>
                 } catch (_) {
                     detectorScanResults[i] = { ...acc, error: true, message: 'Error de red' };
                 }
+                checked++;
+                if (loaderText) loaderText.textContent = (sequential ? 'Verificando 1×1: ' : 'Verificando en conjunto: ') + checked + '/' + total + '...';
             }
         }
 
@@ -1373,41 +1590,85 @@ O cualquier texto que contenga URLs de listas M3U/IPTV"></textarea>
         await Promise.all(workers);
 
         loader.style.display = 'none';
+        if (loaderText) loaderText.textContent = 'VERIFICANDO CUENTAS...';
+        if (btnAll) btnAll.disabled = false;
+        if (btn1x1) btn1x1.disabled = false;
 
-        // Renderizar tabla de resultados del detector
+        // Renderizar tarjetas de resultados del detector
         let html = `
             <div class="msg-success">✅ Escaneo del detector completado — ${active} activas de ${total}</div>
-            <table class="results-table">
-                <thead><tr>
-                    <th>#</th>
-                    <th>Servidor</th>
-                    <th>Usuario</th>
-                    <th>Contraseña</th>
-                    <th>Estado</th>
-                    <th>Días</th>
-                    <th>Expira</th>
-                </tr></thead>
-                <tbody>
+            <div style="margin-top:20px; display: flex; flex-direction: column; gap: 16px;">
         `;
 
         detectorScanResults.forEach((r, i) => {
-            const isActive = !r.error && r.daysLeft !== 'EXPIRADO';
-            const rowCls   = r.error ? 'row-error' : isActive ? 'row-active' : 'row-error';
+            const isError = !!r.error;
+            const isActive = !r.error && (r.statusCode === 'active' || r.statusCode === 'activo');
+            const isExpired = !r.error && !isActive;
+
+            let cardStatusClass = 'error';
+            let badgeClass = 'badge-error';
+            let badgeText = '⚠️ ERROR';
+
+            if (isActive) {
+                cardStatusClass = 'active';
+                badgeClass = 'badge-active';
+                badgeText = '✅ ACTIVA';
+            } else if (isExpired) {
+                cardStatusClass = 'expired';
+                badgeClass = 'badge-expired';
+                badgeText = '🗓️ EXPIRADA';
+            }
+
+            const m3uUrl = `${r.protocol}${r.host}:${r.port}/get.php?username=${encodeURIComponent(r.username)}&password=${encodeURIComponent(r.password)}&type=m3u_plus`;
+
             html += `
-                <tr class="${rowCls}">
-                    <td>${i + 1}</td>
-                    <td>${escHtml(r.host + ':' + r.port)}</td>
-                    <td>${escHtml(r.username)}</td>
-                    <td>${escHtml(r.password)}</td>
-                    <td class="${r.error ? 'status-error' : isActive ? 'status-ok' : 'status-error'}">${r.error ? '⚠️ Error' : escHtml(r.status)}</td>
-                    <td class="${r.daysClass || ''}">${r.error ? '—' : r.daysLeft}</td>
-                    <td>${r.error ? '—' : escHtml(r.expDate)}</td>
-                </tr>`;
+                <div class="result-card ${cardStatusClass}">
+                    <div class="result-header">
+                        <div class="result-url" title="${escHtml(m3uUrl)}">${escHtml(m3uUrl)}</div>
+                        <span class="status-badge ${badgeClass}">${badgeText}</span>
+                    </div>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Servidor</div>
+                            <div class="info-value">${escHtml(r.host)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Puerto</div>
+                            <div class="info-value">${escHtml(r.port)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Usuario</div>
+                            <div class="info-value highlight">${escHtml(r.username)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Contraseña</div>
+                            <div class="info-value">${escHtml(r.password)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Días Restantes</div>
+                            <div class="info-value ${r.daysClass || ''}">${r.error ? '—' : r.daysLeft}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Expira el</div>
+                            <div class="info-value">${r.error ? '—' : escHtml(r.expDate)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Conexiones Max</div>
+                            <div class="info-value">${r.error ? '—' : escHtml(r.maxConnections)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Conexiones Activas</div>
+                            <div class="info-value ${!r.error && parseInt(r.activeConnections) > 0 ? 'success' : ''}">${r.error ? '—' : escHtml(r.activeConnections)}</div>
+                        </div>
+                    </div>
+                    ${r.message ? `<div style="margin-top: 15px; padding: 10px; background: rgba(255, 74, 74, 0.1); border-radius: 6px; color: var(--red-glow); font-size: 11px;">⚠️ ${escHtml(r.message)}</div>` : ''}
+                </div>
+            `;
         });
 
         html += `
-                </tbody>
-            </table>
+            </div>
             <div style="margin-top:16px;">
                 <button class="btn btn-export" onclick="exportDetectorToTXT()">📥 Exportar Activas (TXT)</button>
             </div>
@@ -1423,23 +1684,16 @@ O cualquier texto que contenga URLs de listas M3U/IPTV"></textarea>
         const activas = detectorScanResults.filter(r => !r.error && r.daysLeft !== 'EXPIRADO' && r.daysLeft !== '-');
         if (!activas.length) { alert('No hay cuentas activas para exportar.'); return; }
 
-        const sep  = '─'.repeat(50);
-        let txt    = `Checker @Devayanokoji\n${sep}\n\n`;
-
+        let txt = '';
         activas.forEach((r, i) => {
             const base   = `${r.protocol}${r.host}:${r.port}`;
             const m3uUrl = `${base}/get.php?username=${encodeURIComponent(r.username)}&password=${encodeURIComponent(r.password)}&type=m3u_plus`;
-            txt += `[${i + 1}]\n`;
-            txt += `Usuario:        ${r.username}\n`;
-            txt += `Contraseña:     ${r.password}\n`;
-            txt += `URL:            ${base}\n`;
-            txt += `Días Restantes: ${r.daysLeft}\n`;
-            txt += `Expira:         ${r.expDate}\n`;
-            txt += `M3U:            ${m3uUrl}\n`;
-            if (i < activas.length - 1) txt += `\n${sep}\n\n`;
+            txt += `usuario: ${r.username}\n`;
+            txt += `contraseña: ${r.password}\n`;
+            txt += `url: ${base}\n`;
+            txt += `días restantes: ${r.daysLeft}\n`;
+            txt += `m3u: ${m3uUrl}\n\n`;
         });
-
-        txt += `\n\n${sep}\nChecker @Devayanokoji`;
 
         const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
         
@@ -1467,29 +1721,30 @@ O cualquier texto que contenga URLs de listas M3U/IPTV"></textarea>
         detectorScanResults = [];
     }
 
-    // ═══════════════════════════════════════════════
-    //  UTILIDADES
-    // ═══════════════════════════════════════════════
-    function copyText(text) {
-        const btn = event?.target;
-        navigator.clipboard.writeText(text)
-            .then(() => { if (btn) { btn.textContent = '✅'; setTimeout(() => btn.textContent = '📋 Copiar', 1800); } })
-            .catch(() => {
-                const ta = Object.assign(document.createElement('textarea'), { value: text });
-                document.body.appendChild(ta); ta.select();
-                document.execCommand('copy');
-                document.body.removeChild(ta);
-            });
-    }
+        // ═══════════════════════════════════════════════
+        //  UTILIDADES
+        // ═══════════════════════════════════════════════
+        function copyText(text) {
+            const btn = event?.target;
+            navigator.clipboard.writeText(text)
+                .then(() => { if (btn) { btn.textContent = '✅'; setTimeout(() => btn.textContent = '📋 Copiar', 1800); } })
+                .catch(() => {
+                    const ta = Object.assign(document.createElement('textarea'), { value: text });
+                    document.body.appendChild(ta); ta.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                });
+        }
 
-    function escHtml(str) {
-        if (str == null) return '';
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
-    }
+        function escHtml(str) {
+            if (str == null) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
     </script>
 </body>
+
 </html>
