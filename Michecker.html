@@ -524,14 +524,19 @@
             <div id="m3uResult" class="result"></div>
         </div>
 
-        <!-- SECCIÓN 2: ESCANEO MASIVO -->
+        <!-- SECCIÓN 2: DETECTOR & ESCANEO MASIVO INTELIGENTE -->
         <div class="card">
-            <h2>📊 Escaneo Masivo</h2>
+            <h2>📊 Detector & Escaneo Inteligente (M3U & Hits)</h2>
             <div class="info-box">
-                Pega múltiples URLs M3U (una por línea). Escaneo ultra-rápido con 15 hilos simultáneos.
+                Pega cualquier texto con URLs M3U o logs estructurados de Hits de Telegram. Las detectaremos automáticamente.
             </div>
-            <textarea id="bulkM3uInput" rows="8"
-                placeholder="https://sdmx.us:443/playlist/cWbFYs8bD5/j9cJqHuRxK/m3u_plus&#10;https://sdmx.us:443/playlist/3JnAMzm274/DfbmXKmVwU/m3u_plus"></textarea>
+            <textarea id="bulkM3uInput" rows="8" oninput="detectBulkUrls()"
+                placeholder="Pega aquí URLs M3U, listas de reproducción o logs de Hits (ej. Host, Usuário, Senha...)"></textarea>
+            
+            <div id="detectorStats" style="display: none; margin: 10px 0 18px 0; font-size: 13px; font-family: var(--font-ui); letter-spacing: 1px; color: var(--accent2);">
+                ⚡ CUENTAS DETECTADAS: <span id="detectedCount" style="font-weight: bold; color: var(--green); text-shadow: 0 0 10px rgba(0,224,150,0.5);">0</span>
+            </div>
+
             <div>
                 <button class="btn" onclick="scanBulkWithDays()" id="btnBulk">
                     🚀 Escanear Todo
@@ -567,12 +572,56 @@
     // ═══════════════════════════════════════════════
     //  PARSEAR URL M3U
     // ═══════════════════════════════════════════════
+    // ═══════════════════════════════════════════════
+    //  PARSEAR URL M3U (Mejorado y flexible)
+    // ═══════════════════════════════════════════════
     function parseM3UUrl(url) {
         url = url.trim();
         if (!url) return null;
 
-        // Formato 1: /get.php?username=X&password=Y
-        const m1 = url.match(/^(https?:\/\/)([^\/:]+)(?::(\d+))?\/get\.php\?username=([^&]+)&password=([^&]+)/i);
+        try {
+            // Intentar parsear usando el objeto URL estándar
+            const u = new URL(url);
+            const protocol = u.protocol + '//';
+            const host = u.hostname;
+            const port = u.port || (u.protocol === 'https:' ? '443' : '80');
+            
+            // Caso 1: get.php con username y password
+            if (u.pathname.includes('get.php') || u.pathname.includes('player_api.php') || u.pathname.includes('panel_api.php') || u.pathname.includes('xmltv.php')) {
+                const username = u.searchParams.get('username');
+                const password = u.searchParams.get('password');
+                if (username && password) {
+                    return { protocol, host, port, username, password, original: url };
+                }
+            }
+            
+            // Caso 2: /playlist/username/password/m3u_plus
+            const playlistMatch = u.pathname.match(/\/playlist\/([^\/]+)\/([^\/]+)/i);
+            if (playlistMatch) {
+                return {
+                    protocol, host, port,
+                    username: decodeURIComponent(playlistMatch[1]),
+                    password: decodeURIComponent(playlistMatch[2]),
+                    original: url
+                };
+            }
+            
+            // Caso 3: /get/username/password/m3u_plus
+            const getMatch = u.pathname.match(/\/get\/([^\/]+)\/([^\/]+)/i);
+            if (getMatch) {
+                return {
+                    protocol, host, port,
+                    username: decodeURIComponent(getMatch[1]),
+                    password: decodeURIComponent(getMatch[2]),
+                    original: url
+                };
+            }
+        } catch(e) {
+            // Fallback con RegExp si falla URL()
+        }
+
+        // Expresiones regulares de fallback
+        const m1 = url.match(/(https?:\/\/)([^\/:]+)(?::(\d+))?\/get\.php\?[^]*?username=([^&]+)[^]*?password=([^&]+)/i);
         if (m1) return {
             protocol: m1[1], host: m1[2],
             port: m1[3] || (m1[1] === 'https://' ? '443' : '80'),
@@ -581,8 +630,7 @@
             original: url
         };
 
-        // Formato 2: /playlist/USER/PASS/m3u_plus
-        const m2 = url.match(/^(https?:\/\/)([^\/:]+)(?::(\d+))?\/playlist\/([^\/]+)\/([^\/]+)\/m3u/i);
+        const m2 = url.match(/(https?:\/\/)([^\/:]+)(?::(\d+))?\/playlist\/([^\/]+)\/([^\/]+)/i);
         if (m2) return {
             protocol: m2[1], host: m2[2],
             port: m2[3] || (m2[1] === 'https://' ? '443' : '80'),
@@ -592,6 +640,126 @@
         };
 
         return null;
+    }
+
+    // ═══════════════════════════════════════════════
+    //  EXTRACTOR INTELIGENTE DE CUENTAS (M3U & Hits)
+    // ═══════════════════════════════════════════════
+    function extractM3UAccounts(text) {
+        const accounts = [];
+        const seen = new Set();
+
+        if (!text) return accounts;
+
+        // 1. Extraer URLs M3U directas
+        const urlRegex = /https?:\/\/[^\s"'<>]+(?:get\.php|player_api\.php|panel_api\.php|playlist\/[^\s"'<>]+)/gi;
+        const matches = text.match(urlRegex) || [];
+        
+        matches.forEach(url => {
+            const cleanUrl = url.replace(/[.,;'"`)\]}]+$/, '');
+            const parsed = parseM3UUrl(cleanUrl);
+            if (parsed) {
+                const key = `${parsed.host}:${parsed.port}|${parsed.username}`;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    accounts.push(parsed);
+                }
+            }
+        });
+
+        // 2. Extraer de formatos de texto estructurado (ej: logs de Hits de Telegram)
+        const lines = text.split('\n');
+        let currentHost = null;
+        let currentUser = null;
+        let currentPass = null;
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            
+            // Detectar Host/Servidor
+            const hostMatch = line.match(/(?:Host|Servidor|IP do Host|📍IP do Host)\s*►?\s*(https?:\/\/[^\s]+)/i) || 
+                              line.match(/(?:Host|Servidor)\s*:\s*(https?:\/\/[^\s]+)/i);
+            if (hostMatch) {
+                currentHost = hostMatch[1].replace(/\/$/, '');
+            }
+            
+            // Detectar Usuario
+            const userMatch = line.match(/(?:Usu[áa]rio|Usuario|User|👤)\s*►?\s*([^\s]+)/i) || 
+                              line.match(/(?:Usu[áa]rio|Usuario|User)\s*:\s*([^\s]+)/i);
+            if (userMatch) {
+                currentUser = userMatch[1];
+            }
+            
+            // Detectar Contraseña
+            const passMatch = line.match(/(?:Senha|Password|Contrase[ñn]a|🔒)\s*►?\s*([^\s]+)/i) || 
+                              line.match(/(?:Senha|Password|Contrase[ñn]a)\s*:\s*([^\s]+)/i);
+            if (passMatch) {
+                currentPass = passMatch[1];
+            }
+
+            // Si detectamos un conjunto completo (o si encontramos una línea que indica final de bloque y tenemos datos parciales)
+            if (currentHost && currentUser && currentPass) {
+                let hostClean = currentHost;
+                let proto = 'http://';
+                if (hostClean.startsWith('https://')) {
+                    proto = 'https://';
+                    hostClean = hostClean.substring(8);
+                } else if (hostClean.startsWith('http://')) {
+                    hostClean = hostClean.substring(7);
+                }
+                
+                const parts = hostClean.split('/');
+                const hostPort = parts[0];
+                const hostParts = hostPort.split(':');
+                const domain = hostParts[0];
+                const port = hostParts[1] || (proto === 'https://' ? '443' : '80');
+
+                const m3uUrl = `${proto}${domain}:${port}/get.php?username=${encodeURIComponent(currentUser)}&password=${encodeURIComponent(currentPass)}&type=m3u_plus`;
+                const parsed = {
+                    protocol: proto,
+                    host: domain,
+                    port: port,
+                    username: currentUser,
+                    password: currentPass,
+                    original: m3uUrl
+                };
+
+                const key = `${parsed.host}:${parsed.port}|${parsed.username}`;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    accounts.push(parsed);
+                }
+                
+                // Limpiar credenciales para buscar el siguiente bloque de hit, pero mantenemos el host de apoyo
+                currentUser = null;
+                currentPass = null;
+            }
+        }
+
+        return accounts;
+    }
+
+    // ═══════════════════════════════════════════════
+    //  MOSTRAR ESTADÍSTICAS DEL DETECTOR EN TIEMPO REAL
+    // ═══════════════════════════════════════════════
+    function detectBulkUrls() {
+        const input = document.getElementById('bulkM3uInput').value;
+        const statsDiv = document.getElementById('detectorStats');
+        const countSpan = document.getElementById('detectedCount');
+        
+        if (!input.trim()) {
+            statsDiv.style.display = 'none';
+            return;
+        }
+        
+        const accounts = extractM3UAccounts(input);
+        statsDiv.style.display = 'block';
+        
+        if (accounts.length > 0) {
+            countSpan.textContent = accounts.length;
+        } else {
+            countSpan.textContent = '0 (Buscando...)';
+        }
     }
 
     // ═══════════════════════════════════════════════
@@ -802,15 +970,14 @@
         progressDiv.innerHTML = '';
 
         if (!input) {
-            resultDiv.innerHTML = '<div class="msg-error">❌ Ingresa URLs para escanear</div>';
+            resultDiv.innerHTML = '<div class="msg-error">❌ Ingresa URLs o Logs de Hits para escanear</div>';
             resultDiv.classList.add('show'); return;
         }
 
-        const lines     = input.split('\n').map(l => l.trim()).filter(Boolean);
-        const validUrls = lines.map(parseM3UUrl).filter(Boolean);
+        const validUrls = extractM3UAccounts(input);
 
         if (validUrls.length === 0) {
-            resultDiv.innerHTML = '<div class="msg-error">❌ No se encontraron URLs válidas</div>';
+            resultDiv.innerHTML = '<div class="msg-error">❌ No se encontraron cuentas/URLs válidas en el texto</div>';
             resultDiv.classList.add('show'); return;
         }
 
@@ -927,6 +1094,11 @@
         const rd = document.getElementById('bulkResult');
         rd.innerHTML = ''; rd.classList.remove('show');
         document.getElementById('bulkProgress').innerHTML = '';
+        
+        // Ocultar contador de detector inteligente
+        const statsDiv = document.getElementById('detectorStats');
+        if (statsDiv) statsDiv.style.display = 'none';
+        
         window.lastResults = null;
     }
 
@@ -959,9 +1131,14 @@
         txt += `\n\n${sep}\nChecker @Devayanokoji`;
 
         const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+        
+        // Generar sufijo aleatorio de 5 caracteres
+        const randSfx = Math.random().toString(36).substring(2, 7).toUpperCase();
+        const filename = `m3u_ayanokoji_${randSfx}.txt`;
+
         const a    = Object.assign(document.createElement('a'), {
             href:     URL.createObjectURL(blob),
-            download: `iptv_activas_${activas.length}_${new Date().toISOString().slice(0,10)}.txt`
+            download: filename
         });
         document.body.appendChild(a);
         a.click();
