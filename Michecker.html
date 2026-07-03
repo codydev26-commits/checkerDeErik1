@@ -549,6 +549,58 @@
             <div id="bulkResult" class="result"></div>
         </div>
 
+        <!-- SECCIÓN 2.5: DETECTOR DEDICADO DE M3U & HITS -->
+        <div class="card" id="detectorInteligenteCard">
+            <h2>🔍 Detector de URLs M3U & Hits</h2>
+            <div class="info-box">
+                Pega cualquier texto con URLs M3U o logs estructurados de Hits de Telegram. Las detectaremos individualmente.
+            </div>
+            
+            <textarea id="detectorInput" rows="8" placeholder="Pega aquí tu texto con URLs M3U... 
+
+Ejemplo:
+🌐Host ► http://2025easy.lat:80
+┣─👤Usuário ► Edmar457
+┣─🔒Senha ► 935CF480
+...
+O cualquier texto que contenga URLs de listas M3U/IPTV"></textarea>
+            
+            <div style="margin-top: 10px;">
+                <button class="btn" onclick="detectDetectorURLs()">
+                    🔍 Detectar URLs M3U
+                </button>
+                <button class="btn btn-danger" onclick="clearDetector()">
+                    🗑️ Limpiar
+                </button>
+            </div>
+            
+            <!-- URLs Detectadas -->
+            <div id="detectorDetectedSection" style="display: none; margin-top: 24px; border-top: 1px solid rgba(74,158,255,0.15); padding-top: 20px;">
+                <h3 style="font-family: var(--font-ui); color: var(--accent2); font-size: 1.15em; margin-bottom: 12px; letter-spacing: 2px;">🔗 URLs DETECTADAS (<span id="detectorUrlCount">0</span>)</h3>
+                
+                <div id="detectorUrlList" style="display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto; padding: 12px; margin-bottom: 20px; border: 1px solid rgba(74,158,255,0.2); background: rgba(0,5,15,0.7);">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+                
+                <div>
+                    <button class="btn btn-export" onclick="checkAllDetector()">
+                        ✅ Verificar Todas
+                    </button>
+                    <button class="btn" onclick="copyAllDetector()">
+                        📋 Copiar Todas
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loader de Verificación -->
+            <div id="detectorLoader" style="display: none; text-align: center; margin: 25px 0; font-family: var(--font-ui); color: var(--accent2); letter-spacing: 1px;">
+                <span class="scanning-dot"></span> VERIFICANDO CUENTAS...
+            </div>
+
+            <!-- Resultados del Detector -->
+            <div id="detectorResults" class="result"></div>
+        </div>
+
         <!-- SECCIÓN 3: Xtream → M3U -->
         <div class="card">
             <h2>📤 Xtream → M3U</h2>
@@ -1169,6 +1221,250 @@
             ${ri('🔗 M3U URL', m3u, m3u, true)}
         `;
         rd.classList.add('show');
+    }
+
+    // ═══════════════════════════════════════════════
+    //  LÓGICA DEL DETECTOR INTELIGENTE DEDICADO
+    // ═══════════════════════════════════════════════
+    let detectorDetectedAccounts = [];
+    let detectorScanResults = [];
+
+    function detectDetectorURLs() {
+        const text = document.getElementById('detectorInput').value;
+        const section = document.getElementById('detectorDetectedSection');
+        const listDiv = document.getElementById('detectorUrlList');
+        const countSpan = document.getElementById('detectorUrlCount');
+        const resultsDiv = document.getElementById('detectorResults');
+
+        resultsDiv.innerHTML = '';
+        resultsDiv.classList.remove('show');
+
+        detectorDetectedAccounts = extractM3UAccounts(text);
+
+        if (detectorDetectedAccounts.length === 0) {
+            alert('❌ No se detectaron URLs M3U ni formatos de Hits válidos.');
+            section.style.display = 'none';
+            return;
+        }
+
+        countSpan.textContent = detectorDetectedAccounts.length;
+        listDiv.innerHTML = '';
+
+        detectorDetectedAccounts.forEach((acc, index) => {
+            const m3uUrl = `${acc.protocol}${acc.host}:${acc.port}/get.php?username=${encodeURIComponent(acc.username)}&password=${encodeURIComponent(acc.password)}&type=m3u_plus`;
+            
+            const item = document.createElement('div');
+            item.className = 'result-item';
+            item.style.borderBottom = '1px solid rgba(74,158,255,0.1)';
+            item.style.padding = '8px 0';
+            item.innerHTML = `
+                <span class="value" style="font-size:11px; font-family:var(--font-mono); color:var(--accent2);">${escHtml(m3uUrl)}</span>
+                <div style="display: flex; gap: 8px;">
+                    <button class="copy-btn" onclick="copySingleDetector(${index})">📋 Copiar</button>
+                    <button class="copy-btn" id="btnDetVerif-${index}" onclick="checkSingleDetector(${index})" style="border-color:var(--green); color:var(--green);">🔍 Verificar</button>
+                </div>
+            `;
+            listDiv.appendChild(item);
+        });
+
+        section.style.display = 'block';
+    }
+
+    function copySingleDetector(index) {
+        const acc = detectorDetectedAccounts[index];
+        if (!acc) return;
+        const m3uUrl = `${acc.protocol}${acc.host}:${acc.port}/get.php?username=${encodeURIComponent(acc.username)}&password=${encodeURIComponent(acc.password)}&type=m3u_plus`;
+        copyText(m3uUrl);
+    }
+
+    function copyAllDetector() {
+        if (detectorDetectedAccounts.length === 0) return;
+        const urls = detectorDetectedAccounts.map(acc => {
+            return `${acc.protocol}${acc.host}:${acc.port}/get.php?username=${encodeURIComponent(acc.username)}&password=${encodeURIComponent(acc.password)}&type=m3u_plus`;
+        }).join('\n');
+        copyText(urls);
+    }
+
+    async function checkSingleDetector(index) {
+        const acc = detectorDetectedAccounts[index];
+        if (!acc) return;
+
+        const btn = document.getElementById(`btnDetVerif-${index}`);
+        const originalText = btn.textContent;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="scanning-dot" style="width:5px; height:5px;"></span>...';
+
+        const resultsDiv = document.getElementById('detectorResults');
+        resultsDiv.innerHTML = '';
+        resultsDiv.classList.remove('show');
+
+        try {
+            const info = await verifyAccount(acc);
+            const m3uUrl = `${acc.protocol}${acc.host}:${acc.port}/get.php?username=${encodeURIComponent(acc.username)}&password=${encodeURIComponent(acc.password)}&type=m3u_plus`;
+            
+            let html = `
+                <div class="msg-success">✅ Resultado para la cuenta seleccionada:</div>
+                ${ri('🖥️ Servidor',   `${acc.host}:${acc.port}`)}
+                ${ri('👤 Usuario',    acc.username, acc.username)}
+                ${ri('🔒 Password',   acc.password, acc.password)}
+                ${ri('🔗 M3U URL',    m3uUrl, m3uUrl, true)}
+            `;
+
+            if (info.error) {
+                html += `
+                    <div class="msg-warning" style="margin-top:16px;">
+                        ⚠️ No se pudieron obtener los días (CORS). Verifica manualmente.
+                    </div>
+                `;
+            } else {
+                html += `
+                    <hr style="border:none;border-top:1px solid rgba(74,158,255,0.15);margin:18px 0;">
+                    <h3 style="font-family:var(--font-ui);color:var(--accent2);letter-spacing:2px;margin-bottom:12px;">📊 ESTADO</h3>
+                    <div class="result-item"><span class="label">Estado</span><span class="value ${info.statusCode === 'active' ? 'status-ok' : 'status-error'}">${info.status}</span></div>
+                    <div class="result-item"><span class="label">⏳ Días</span><span class="days-box ${info.daysClass}">${info.daysLeft}${typeof info.daysLeft === 'number' ? ' días' : ''}</span></div>
+                    <div class="result-item"><span class="label">📅 Expira</span><span class="value">${info.expDate}</span></div>
+                    <div class="result-item"><span class="label">👥 Conexiones</span><span class="value">${info.activeConnections} / ${info.maxConnections}</span></div>
+                `;
+            }
+
+            resultsDiv.innerHTML = html;
+            resultsDiv.classList.add('show');
+        } catch(e) {
+            resultsDiv.innerHTML = `<div class="msg-error">❌ Error al conectar: ${escHtml(e.message)}</div>`;
+            resultsDiv.classList.add('show');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = originalText;
+        }
+    }
+
+    async function checkAllDetector() {
+        if (detectorDetectedAccounts.length === 0) return;
+
+        const loader = document.getElementById('detectorLoader');
+        const resultsDiv = document.getElementById('detectorResults');
+
+        loader.style.display = 'block';
+        resultsDiv.innerHTML = '';
+        resultsDiv.classList.remove('show');
+
+        const total = detectorDetectedAccounts.length;
+        let active = 0;
+        
+        const CONCURRENCY = 15;
+        detectorScanResults = new Array(total);
+        let idx = 0;
+
+        async function worker() {
+            while (idx < total) {
+                const i = idx++;
+                const acc = detectorDetectedAccounts[i];
+                try {
+                    const info = await verifyAccount(acc);
+                    detectorScanResults[i] = { ...acc, ...info };
+                    if (!info.error && info.daysLeft !== 'EXPIRADO') active++;
+                } catch (_) {
+                    detectorScanResults[i] = { ...acc, error: true, message: 'Error de red' };
+                }
+            }
+        }
+
+        const workers = Array.from({ length: Math.min(CONCURRENCY, total) }, () => worker());
+        await Promise.all(workers);
+
+        loader.style.display = 'none';
+
+        // Renderizar tabla de resultados del detector
+        let html = `
+            <div class="msg-success">✅ Escaneo del detector completado — ${active} activas de ${total}</div>
+            <table class="results-table">
+                <thead><tr>
+                    <th>#</th>
+                    <th>Servidor</th>
+                    <th>Usuario</th>
+                    <th>Contraseña</th>
+                    <th>Estado</th>
+                    <th>Días</th>
+                    <th>Expira</th>
+                </tr></thead>
+                <tbody>
+        `;
+
+        detectorScanResults.forEach((r, i) => {
+            const isActive = !r.error && r.daysLeft !== 'EXPIRADO';
+            const rowCls   = r.error ? 'row-error' : isActive ? 'row-active' : 'row-error';
+            html += `
+                <tr class="${rowCls}">
+                    <td>${i + 1}</td>
+                    <td>${escHtml(r.host + ':' + r.port)}</td>
+                    <td>${escHtml(r.username)}</td>
+                    <td>${escHtml(r.password)}</td>
+                    <td class="${r.error ? 'status-error' : isActive ? 'status-ok' : 'status-error'}">${r.error ? '⚠️ Error' : escHtml(r.status)}</td>
+                    <td class="${r.daysClass || ''}">${r.error ? '—' : r.daysLeft}</td>
+                    <td>${r.error ? '—' : escHtml(r.expDate)}</td>
+                </tr>`;
+        });
+
+        html += `
+                </tbody>
+            </table>
+            <div style="margin-top:16px;">
+                <button class="btn btn-export" onclick="exportDetectorToTXT()">📥 Exportar Activas (TXT)</button>
+            </div>
+        `;
+
+        resultsDiv.innerHTML = html;
+        resultsDiv.classList.add('show');
+    }
+
+    function exportDetectorToTXT() {
+        if (!detectorScanResults || !detectorScanResults.length) return;
+
+        const activas = detectorScanResults.filter(r => !r.error && r.daysLeft !== 'EXPIRADO' && r.daysLeft !== '-');
+        if (!activas.length) { alert('No hay cuentas activas para exportar.'); return; }
+
+        const sep  = '─'.repeat(50);
+        let txt    = `Checker @Devayanokoji\n${sep}\n\n`;
+
+        activas.forEach((r, i) => {
+            const base   = `${r.protocol}${r.host}:${r.port}`;
+            const m3uUrl = `${base}/get.php?username=${encodeURIComponent(r.username)}&password=${encodeURIComponent(r.password)}&type=m3u_plus`;
+            txt += `[${i + 1}]\n`;
+            txt += `Usuario:        ${r.username}\n`;
+            txt += `Contraseña:     ${r.password}\n`;
+            txt += `URL:            ${base}\n`;
+            txt += `Días Restantes: ${r.daysLeft}\n`;
+            txt += `Expira:         ${r.expDate}\n`;
+            txt += `M3U:            ${m3uUrl}\n`;
+            if (i < activas.length - 1) txt += `\n${sep}\n\n`;
+        });
+
+        txt += `\n\n${sep}\nChecker @Devayanokoji`;
+
+        const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+        
+        // Generar nombre de archivo m3u_ayanokoji_xxx.txt
+        const randSfx = Math.random().toString(36).substring(2, 7).toUpperCase();
+        const filename = `m3u_ayanokoji_${randSfx}.txt`;
+
+        const a    = Object.assign(document.createElement('a'), {
+            href:     URL.createObjectURL(blob),
+            download: filename
+        });
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+    }
+
+    function clearDetector() {
+        document.getElementById('detectorInput').value = '';
+        document.getElementById('detectorDetectedSection').style.display = 'none';
+        const resultsDiv = document.getElementById('detectorResults');
+        resultsDiv.innerHTML = '';
+        resultsDiv.classList.remove('show');
+        detectorDetectedAccounts = [];
+        detectorScanResults = [];
     }
 
     // ═══════════════════════════════════════════════
