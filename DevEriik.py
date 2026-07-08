@@ -10,6 +10,30 @@ Usage examples:
   python3 DevEriik.py --input combos.txt --threads 20 --timeout 8 --server http://example.com:8080
 
 """
+import subprocess
+import os
+import sys as _sys_boot
+# Auto-install dependencies (requests) when running in Termux / Pydroid3
+try:
+    import requests
+except Exception:
+    print('Dependencias faltantes: instalando requirements.txt...')
+    try:
+        subprocess.check_call([_sys_boot.executable, '-m', 'pip', 'install', '--upgrade', 'pip'])
+    except Exception:
+        pass
+    try:
+        req_path = os.path.join(os.path.dirname(__file__), 'requirements.txt')
+        subprocess.check_call([_sys_boot.executable, '-m', 'pip', 'install', '-r', req_path])
+    except Exception as e:
+        print('Error instalando dependencias:', e)
+        sys.exit(1)
+    try:
+        import requests
+    except Exception as e:
+        print('No se pudo importar requests tras la instalación:', e)
+        sys.exit(1)
+
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import argparse
 import random
