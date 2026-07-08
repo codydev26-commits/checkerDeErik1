@@ -18,22 +18,33 @@ try:
     import requests
 except Exception:
     print('Dependencias faltantes: instalando requirements.txt...')
-    try:
-        subprocess.check_call([_sys_boot.executable, '-m', 'pip', 'install', '--upgrade', 'pip'])
-    except Exception:
-        pass
-    try:
-        req_path = os.path.join(os.path.dirname(__file__), 'requirements.txt')
-        subprocess.check_call([_sys_boot.executable, '-m', 'pip', 'install', '-r', req_path])
-    except Exception as e:
-        print('Error instalando dependencias:', e)
+    req_path = os.path.join(os.path.dirname(__file__), 'requirements.txt')
+    installed = False
+    # Try multiple common pip invocation methods
+    cmds = [
+        [_sys_boot.executable, '-m', 'pip', 'install', '--upgrade', 'pip'],
+        [_sys_boot.executable, '-m', 'pip', 'install', '-r', req_path],
+        ['pip', 'install', '-r', req_path],
+        ['python', '-m', 'pip', 'install', '-r', req_path]
+    ]
+    for cmd in cmds:
+        try:
+            subprocess.check_call(cmd)
+            # if we just upgraded pip, continue to next to install requirements
+            if '-r' in cmd:
+                installed = True
+                break
+        except Exception:
+            continue
+    if not installed:
+        print('No se pudieron instalar automáticamente las dependencias. Ejecuta:')
+        print(f'  pip install -r "{req_path}"')
         sys.exit(1)
     try:
         import requests
     except Exception as e:
         print('No se pudo importar requests tras la instalación:', e)
         sys.exit(1)
-
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import argparse
 import random
