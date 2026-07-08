@@ -604,24 +604,44 @@
             color: var(--accent);
         }
 
-        @media (max-width: 768px) {
-            .header { flex-direction: column; gap: 20px; }
-            .stats-bar { gap: 10px; }
+        @media (max-width: 1024px) {
+            .container { padding: 25px 20px; }
+            .stats-bar { gap: 16px; flex-wrap: wrap; justify-content: space-between; }
+            .stat-item { min-width: 120px; flex: 1; }
             .tabs { flex-wrap: wrap; }
-            .tab { flex: 1; min-width: 140px; }
+            .tab { flex: 1 1 140px; min-width: 120px; }
             .combo-top-bar {
                 grid-template-columns: 1fr;
             }
             .combo-actions {
                 grid-template-columns: 1fr;
             }
-            .btn {
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-input {
                 width: 100%;
-                justify-content: center;
+                min-width: 0;
             }
-            .file-upload {
-                padding: 20px;
+            .filter-btn,
+            .btn-clear {
+                width: 100%;
             }
+        }
+
+        @media (max-width: 768px) {
+            .header { flex-direction: column; gap: 20px; }
+            .tabs { gap: 0; }
+            .tab { flex: 1 1 100%; min-width: 0; }
+            .btn-group { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
+            .combo-top-bar { gap: 12px; }
+            .file-upload { padding: 18px; }
+            .card { padding: 18px; }
+            .input-row { gap: 16px; }
+            .filter-row { gap: 10px; }
+            .toast-container { right: 10px; left: 10px; top: auto; bottom: 20px; }
         }
     </style>
 </head>
@@ -657,16 +677,16 @@
 
     <div class="container">
         <div class="tabs">
-            <div class="tab active" onclick="switchTab('scanner')">
+            <div class="tab active" data-tab="scanner" onclick="switchTab('scanner', event)">
                 <i class="fas fa-bolt"></i> Escáner
             </div>
-            <div class="tab" onclick="switchTab('m3u')">
+            <div class="tab" data-tab="m3u" onclick="switchTab('m3u', event)">
                 <i class="fas fa-link"></i> Analizador M3U
             </div>
-            <div class="tab" onclick="switchTab('results')">
+            <div class="tab" data-tab="results" onclick="switchTab('results', event)">
                 <i class="fas fa-list"></i> Resultados
             </div>
-            <div class="tab" onclick="switchTab('settings')">
+            <div class="tab" data-tab="settings" onclick="switchTab('settings', event)">
                 <i class="fas fa-cog"></i> Configuración
             </div>
         </div>
@@ -792,9 +812,9 @@
                     <div class="filter-row">
                     <input type="text" id="filterHost" class="filter-input" placeholder="Filtrar por host" oninput="applySavedFilters()">
                     <input type="text" id="filterDays" class="filter-input" placeholder="Filtrar por días restantes" oninput="applySavedFilters()">
-                    <button class="btn filter-btn" onclick="filterHits('all', this)">Todos</button>
-                    <button class="btn filter-btn" onclick="filterHits('active', this)">Activos</button>
-                    <button class="btn filter-btn" onclick="filterHits('expired', this)">Expirados</button>
+                    <button class="btn filter-btn active" data-filter="all" onclick="filterHits('all', this)">Todos</button>
+                    <button class="btn filter-btn" data-filter="active" onclick="filterHits('active', this)">Activos</button>
+                    <button class="btn filter-btn" data-filter="expired" onclick="filterHits('expired', this)">Expirados</button>
                     <button class="btn btn-clear" onclick="clearSavedResults()"><i class="fas fa-trash-alt"></i> Borrar guardados</button>
                 </div>
 
@@ -840,12 +860,14 @@
         let isScanning = false;
         let savedHits = JSON.parse(localStorage.getItem('hitHunterResults') || '[]');
 
-        function switchTab(tabName) {
+        function switchTab(tabName, event) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            event.target.closest('.tab').classList.add('active');
+
+            const tabElement = event ? (event.currentTarget || event.target.closest('.tab')) : document.querySelector(`.tab[data-tab="${tabName}"]`);
+            tabElement?.classList.add('active');
+
             document.getElementById(tabName).classList.add('active');
-            
             if (tabName === 'results') displaySavedResults();
         }
 
@@ -1349,7 +1371,7 @@ Días restantes: ${days}`;
 
         function applySavedFilters() {
             const activeBtn = document.querySelector('#results .filter-btn.active');
-            const activeFilter = activeBtn ? activeBtn.getAttribute('onclick').match(/filterHits\('(.+)'\)/)[1] : 'all';
+            const activeFilter = activeBtn ? activeBtn.dataset.filter : 'all';
             filterHits(activeFilter);
         }
 
