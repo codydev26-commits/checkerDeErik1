@@ -918,6 +918,16 @@
             return `${prefix}${generateRandomString(4)}.txt`;
         }
 
+        function normalizeServerUrl(host) {
+            if (!host) return null;
+            let value = host.trim();
+            value = value.replace(/\s+/g, '');
+            if (!/^https?:\/\//i.test(value)) {
+                value = `http://${value}`;
+            }
+            return value.replace(/\/+$/, '');
+        }
+
         function parseCombo(line) {
             line = line.trim();
             if (!line) return null;
@@ -938,14 +948,27 @@
                 }
             }
 
-            // user:pass:host format
+            // user:pass@host or user:pass:host format
             if (line.includes(':')) {
+                if (line.includes('@')) {
+                    const [credentialPart, hostPart] = line.split('@');
+                    const parts = credentialPart.split(':');
+                    if (parts.length >= 2 && hostPart) {
+                        return {
+                            user: parts[0],
+                            pass: parts[1],
+                            host: hostPart.trim(),
+                            type: 'combo'
+                        };
+                    }
+                }
+
                 const parts = line.split(':');
-                if (parts.length >= 3 && parts[2].includes('http')) {
+                if (parts.length >= 3) {
                     return {
                         user: parts[0],
                         pass: parts[1],
-                        host: parts.slice(2).join(':'),
+                        host: parts.slice(2).join(':').trim(),
                         type: 'combo'
                     };
                 }
@@ -964,7 +987,8 @@
         }
 
         async function checkAccount(data, host) {
-            const server = data.host || host;
+            const rawServer = data.host || host;
+            const server = normalizeServerUrl(rawServer);
             if (!server) return null;
 
             const proxy = document.getElementById('corsProxy').value;
