@@ -152,6 +152,31 @@
             border-color: rgba(61,200,255,0.45);
         }
 
+        /* Uploaded files list */
+        .uploaded-file {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.02);
+            margin-top: 8px;
+            justify-content: space-between;
+        }
+
+        .file-meta { flex: 1; min-width: 0; }
+        .file-name { color: var(--text-primary); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .file-count { color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; }
+        .file-actions { display:flex; gap:8px; align-items:center; }
+        .file-preview { margin-top:8px; font-family: 'Consolas', monospace; color:var(--text-secondary); font-size:0.8rem; background:rgba(0,0,0,0.35); padding:8px; border-radius:6px; max-height:120px; overflow:auto; }
+
+        @media (max-width: 768px) {
+            .file-actions { flex-direction: column; }
+            .file-upload .btn { width: 100%; }
+            .combo-top-bar { grid-template-columns: 1fr; }
+        }
+
         .file-upload input {
             position: absolute;
             width: 100%;
@@ -876,21 +901,58 @@
                 return;
             }
             uploadedFiles.forEach((f, idx) => {
-                const el = document.createElement('div');
-                el.style.display = 'flex';
-                el.style.justifyContent = 'space-between';
-                el.style.alignItems = 'center';
-                el.style.marginTop = '6px';
-                el.innerHTML = `<div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:70%">${f.name} — ${f.lines.length} líneas</div>`;
-                const btn = document.createElement('button');
-                btn.className = 'btn';
-                btn.style.padding = '6px 10px';
-                btn.style.fontSize = '0.75rem';
-                btn.textContent = 'Quitar';
-                btn.onclick = () => removeUploadedFile(idx);
-                el.appendChild(btn);
-                container.appendChild(el);
+                const wrapper = document.createElement('div');
+                wrapper.className = 'uploaded-file';
+
+                const meta = document.createElement('div');
+                meta.className = 'file-meta';
+                meta.innerHTML = `<div class="file-name">${f.name}</div><div class="file-count">${f.lines.length} combos agregados</div>`;
+
+                const actions = document.createElement('div');
+                actions.className = 'file-actions';
+
+                const previewBtn = document.createElement('button');
+                previewBtn.className = 'btn';
+                previewBtn.style.padding = '6px 10px';
+                previewBtn.style.fontSize = '0.75rem';
+                previewBtn.textContent = 'Vista previa';
+                previewBtn.onclick = () => togglePreview(idx);
+
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'btn';
+                removeBtn.style.padding = '6px 10px';
+                removeBtn.style.fontSize = '0.75rem';
+                removeBtn.textContent = 'Quitar';
+                removeBtn.onclick = () => removeUploadedFile(idx);
+
+                actions.appendChild(previewBtn);
+                actions.appendChild(removeBtn);
+
+                wrapper.appendChild(meta);
+                wrapper.appendChild(actions);
+
+                // preview container
+                const preview = document.createElement('div');
+                preview.className = 'file-preview';
+                preview.style.display = 'none';
+                const previewLines = f.lines.slice(0, 5).map(l => l.replace(/</g, '&lt;'));
+                preview.innerHTML = previewLines.map(l => `<div>${l}</div>`).join('');
+
+                const outer = document.createElement('div');
+                outer.appendChild(wrapper);
+                outer.appendChild(preview);
+
+                container.appendChild(outer);
             });
+        }
+
+        function togglePreview(index) {
+            const container = document.getElementById('uploadedFilesList');
+            const outer = container.children[index];
+            if (!outer) return;
+            const preview = outer.querySelector('.file-preview');
+            if (!preview) return;
+            preview.style.display = preview.style.display === 'none' ? 'block' : 'none';
         }
 
         function addCombosFromLines(lines, sourceName) {
