@@ -698,7 +698,12 @@
                 </div>
 
                 <div class="input-group">
-                    <label>Host / Server (opcional si está en el combo)</label>
+                    <label>Hosts / Servers (uno por línea, opcional si está en el combo)</label>
+                    <textarea id="serverHosts" placeholder="http://servidor1.com:8080\nservidor2.com:8080\nusuario:pass@host.com:8080"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label>Host único (opcional)</label>
                     <input type="text" id="serverHost" placeholder="http://ejemplo.com:8080">
                 </div>
 
@@ -911,6 +916,14 @@
             return value.replace(/\/+$/, '');
         }
 
+        function getServerList() {
+            const raw = document.getElementById('serverHosts') ? document.getElementById('serverHosts').value.trim() : '';
+            if (!raw) return [];
+            const lines = raw.split('\n').map(l => l.trim()).filter(l => l);
+            const list = lines.map(l => normalizeServerUrl(l)).filter(Boolean);
+            return list;
+        }
+
         function parseCombo(line) {
             line = line.trim();
             if (!line) return null;
@@ -1067,7 +1080,8 @@
 
         async function startScan() {
             const input = document.getElementById('comboInput').value.trim();
-            const host = document.getElementById('serverHost').value.trim();
+            const hostSingle = document.getElementById('serverHost').value.trim();
+            const serverList = getServerList();
             const threads = parseInt(document.getElementById('threads').value);
 
             if (!input) {
@@ -1075,53 +1089,68 @@
                 return;
             }
 
-            const lines = input.split('\n').filter(l => l.trim());
+            const lines = input.split('\n').map(l => l.trim()).filter(l => l);
             if (lines.length === 0) {
                 showToast('No hay combos válidos', 'error');
                 return;
             }
 
+            // Construir lista de tareas: cada tarea es { data, host }
+            const tasks = [];
+            for (const line of lines) {
+                const data = parseCombo(line);
+                if (!data) {
+                    logToConsole('scanConsole', `Formato inválido: ${line.substring(0, 40)}...`, 'error');
+                    continue;
+                }
+
+                if (data.host) {
+                    const h = normalizeServerUrl(data.host);
+                    if (h) tasks.push({ data, host: h });
+                } else if (serverList.length > 0) {
+                    serverList.forEach(s => tasks.push({ data, host: s }));
+                } else if (hostSingle) {
+                    const h = normalizeServerUrl(hostSingle);
+                    if (h) tasks.push({ data, host: h });
+                } else {
+                    logToConsole('scanConsole', `Sin host para: ${data.user} (proporciona hosts o un host único)`, 'error');
+                }
+            }
+
+            if (tasks.length === 0) {
+                showToast('No se generaron tareas de verificación (revisa hosts/combo)', 'error');
+                return;
+            }
+
             scanResults = [];
             isScanning = true;
-            
+
             document.getElementById('hitsContainer').classList.add('active');
             document.getElementById('scanProgress').classList.add('active');
             document.getElementById('hitsContainer').innerHTML = '';
             document.getElementById('scanConsole').innerHTML = '';
 
-            const total = lines.length;
+            const total = tasks.length;
             let completed = 0;
 
-            logToConsole('scanConsole', `Iniciando scan de ${total} cuentas...`, 'info');
+            logToConsole('scanConsole', `Iniciando scan de ${total} verificaciones...`, 'info');
 
             for (let i = 0; i < total; i += threads) {
                 if (!isScanning) break;
 
-                const batch = lines.slice(i, i + threads);
-                const promises = batch.map(async (line) => {
-                    const data = parseCombo(line);
-                    if (!data) {
-                        logToConsole('scanConsole', `Formato inválido: ${line.substring(0, 30)}...`, 'error');
-                        return;
-                    }
-
-                    if (!data.host && !host) {
-                        logToConsole('scanConsole', `Sin host para: ${data.user}`, 'error');
-                        return;
-                    }
-
-                    const result = await checkAccount(data, host);
-                    
+                const batch = tasks.slice(i, i + threads);
+                const promises = batch.map(async (task) => {
+                    const result = await checkAccount(task.data, task.host);
                     if (result && result.status === 'active') {
                         result.fileName = generateFileName();
                         scanResults.push(result);
                         displayHit(result);
-                        logToConsole('scanConsole', `HIT: ${result.user} - ${result.daysRemaining} días`, 'success');
+                        logToConsole('scanConsole', `HIT: ${result.user} @ ${new URL(result.host).hostname} - ${result.daysRemaining} días`, 'success');
                         updateStats();
                     } else if (result && result.status === 'expired') {
-                        logToConsole('scanConsole', `EXPIRADO: ${data.user} - Caducado`, 'error');
+                        logToConsole('scanConsole', `EXPIRADO: ${task.data.user} @ ${task.host}`, 'error');
                     } else {
-                        logToConsole('scanConsole', `ERROR: ${data.user} - ${result?.message || 'Unknown'}`, 'error');
+                        logToConsole('scanConsole', `ERROR: ${task.data.user} @ ${task.host} - ${result?.message || 'Unknown'}`, 'error');
                     }
                 });
 
@@ -1300,8 +1329,9 @@ Días restantes: ${days}`;
             const reader = new FileReader();
             reader.onload = function(e) {
                 const content = e.target.result;
-                document.getElementById('comboInput').value = content;
-                showToast(`Archivo cargado: ${file.name} (${content.split('\n').length} líneas)`, 'success');
+                const current = document.getElementById('comboInput').value;
+                document.getElementById('comboInput').value = current ? current + '\n' + content : content;
+                showToast(`Archivo cargado y agregado: ${file.name} (${content.split('\n').length} líneas)`, 'success');
             };
             reader.readAsText(file);
         }
