@@ -39,15 +39,65 @@
             position: relative;
         }
 
-        /* Overlay to keep text readable */
+        /* Overlay to keep text readable (slightly lighter to show full image) */
         body::before {
             content: '';
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.55);
+            background: rgba(0,0,0,0.32);
             z-index: 0;
             pointer-events: none;
         }
+
+        /* Workspace: two-column layout for desktop to emulate windows */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        /* Window-like cards */
+        .card {
+            background: linear-gradient(180deg, rgba(10,10,10,0.6), rgba(6,6,6,0.45));
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 10px;
+            padding: 0;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 18px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .card-header .controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .window-dot {
+            width: 11px; height: 11px; border-radius: 50%; display: inline-block;
+            box-shadow: 0 0 6px rgba(0,0,0,0.6) inset;
+        }
+        .window-dot.red { background: #ff6b6b; }
+        .window-dot.yellow { background: #f6e58d; }
+        .window-dot.green { background: #7ef0a6; }
 
         /* Header */
         .header {
@@ -754,8 +804,8 @@
         <div id="scanner" class="tab-content active">
             <div class="card">
                 <div class="card-header">
-                    <i class="fas fa-radar"></i>
-                    Combo Scanner
+                    <div style="display:flex; align-items:center; gap:12px;"><i class="fas fa-radar"></i> <div>Combo Scanner</div></div>
+                    <div class="controls"><span class="window-dot red"></span><span class="window-dot yellow"></span><span class="window-dot green"></span></div>
                 </div>
                 
                 <div class="combo-top-bar">
@@ -851,8 +901,8 @@
         <div id="m3u" class="tab-content">
             <div class="card">
                 <div class="card-header">
-                    <i class="fas fa-link"></i>
-                    M3 URL Parser
+                    <div style="display:flex; align-items:center; gap:12px;"><i class="fas fa-link"></i> <div>M3 URL Parser</div></div>
+                    <div class="controls"><span class="window-dot red"></span><span class="window-dot yellow"></span><span class="window-dot green"></span></div>
                 </div>
                 
                 <div class="input-group">
@@ -877,8 +927,8 @@
         <div id="results" class="tab-content">
             <div class="card">
                 <div class="card-header">
-                    <i class="fas fa-list"></i>
-                    Resultados Guardados
+                    <div style="display:flex; align-items:center; gap:12px;"><i class="fas fa-list"></i> <div>Resultados Guardados</div></div>
+                    <div class="controls"><span class="window-dot red"></span><span class="window-dot yellow"></span><span class="window-dot green"></span></div>
                 </div>
                 
                     <div class="filter-row">
@@ -898,8 +948,8 @@
         <div id="settings" class="tab-content">
             <div class="card">
                 <div class="card-header">
-                    <i class="fas fa-cog"></i>
-                    Configuración
+                    <div style="display:flex; align-items:center; gap:12px;"><i class="fas fa-cog"></i> <div>Configuración</div></div>
+                    <div class="controls"><span class="window-dot red"></span><span class="window-dot yellow"></span><span class="window-dot green"></span></div>
                 </div>
                 
                 <div class="input-row">
