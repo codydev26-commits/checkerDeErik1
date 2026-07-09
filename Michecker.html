@@ -15,29 +15,48 @@
         :root {
             --pure-black: #000000;
             --dark-gray: #0a0a0a;
-            --card-bg: #111111;
-            --input-bg: #0d0d0d;
-            --border: #222222;
-            --border-hover: #333333;
+            --card-bg: rgba(10,10,10,0.55);
+            --input-bg: rgba(13,13,13,0.5);
+            --border: rgba(34,34,34,0.45);
+            --border-hover: rgba(51,51,51,0.6);
             --text-primary: #ffffff;
-            --text-secondary: #aaaaaa;
-            --text-muted: #666666;
+            --text-secondary: #cccccc;
+            --text-muted: #bbbbbb;
+            --success: #7ef0a6;
+            --accent: #ff8a8a;
         }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: var(--pure-black);
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
             color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.6;
+            position: relative;
+        }
+
+        /* Overlay to keep text readable */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 0;
+            pointer-events: none;
         }
 
         /* Header */
         .header {
-            background: var(--dark-gray);
-            border-bottom: 1px solid var(--border);
+            background: transparent;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
             padding: 30px 20px;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         .header h1 {
@@ -56,15 +75,15 @@
             margin-top: 8px;
         }
 
-        .header .heart {
-            color: #ff4444;
-        }
+        .header .heart { color: #ff4444; }
 
         /* Container */
         .container {
             max-width: 1000px;
             margin: 0 auto;
             padding: 30px 20px;
+            position: relative;
+            z-index: 1;
         }
 
         /* Cards */
@@ -74,6 +93,7 @@
             border-radius: 12px;
             padding: 25px;
             margin-bottom: 25px;
+            backdrop-filter: blur(6px);
         }
 
         .card-header {
@@ -1056,12 +1076,22 @@
 
         function normalizeServerUrl(host) {
             if (!host) return null;
-            let value = host.trim();
+            let value = String(host).trim();
+            // remove user:pass@ if present
+            if (value.includes('@')) {
+                value = value.substring(value.lastIndexOf('@') + 1);
+            }
             value = value.replace(/\s+/g, '');
             if (!/^https?:\/\//i.test(value)) {
                 value = `http://${value}`;
             }
-            return value.replace(/\/+$/, '');
+            value = value.replace(/\/+$/, '');
+            try {
+                const u = new URL(value);
+                return `${u.protocol}//${u.hostname}${u.port ? ':' + u.port : ''}`;
+            } catch (e) {
+                return null;
+            }
         }
 
         function getServerList() {
@@ -1076,10 +1106,12 @@
             line = line.trim();
             if (!line) return null;
 
-            // Check if it's M3U URL
+            // Check if it's M3U URL (accept with or without protocol)
             if (line.includes('get.php') || line.includes('type=m3u')) {
                 try {
-                    const url = new URL(line);
+                    let url;
+                    try { url = new URL(line); }
+                    catch (e) { url = new URL(/^https?:\/\//i.test(line) ? line : ('http://' + line)); }
                     const params = url.searchParams;
                     return {
                         host: url.origin,
