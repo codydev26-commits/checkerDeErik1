@@ -751,6 +751,8 @@
                     <button class="btn btn-download-app" onclick="downloadAppFile()">
                         <i class="fas fa-mobile-alt"></i> DESCARGAR APP
                     </button>
+                    <!-- Visible combo count badge -->
+                    <div id="combosCountBadge" style="margin-top:12px; color:var(--text-primary); font-weight:700; font-size:0.95rem;">Combos cargados: 0</div>
                 </div>
 
                 <div class="input-group">
@@ -909,8 +911,8 @@
 
         function updateComboTextarea() {
             document.getElementById('comboInput').value = comboList.join('\n');
-            document.getElementById('fileNameDisplay').style.display = comboList.length ? 'block' : 'none';
-            document.getElementById('selectedFileName').textContent = `${comboList.length} combos cargados`;
+            const badge = document.getElementById('combosCountBadge');
+            if (badge) badge.textContent = `Combos cargados: ${comboList.length}`;
         }
 
         function updateUploadedFilesList() {
